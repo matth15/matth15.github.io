@@ -1,0 +1,134 @@
+:root{
+    --maroon:#8a0806;
+    --gray:#adb2b8d5;
+    --box-shadow:2px 0 4px 1px rgba(0,0,0,25%);
+    --background-gradient: linear-gradient(to right,rgba(0,0,0,0.8),
+    rgba(0,0,0,0.7), rgba(0,0,0,0.5)), url(images/brand/Slider-1-1024x500.jpg) no-repeat;
+    
+    --background-gradient-form: linear-gradient(to top,rgba(146, 18, 18, 1.5),
+    rgba(92, 7, 7, 0.7), rgba(0,0,0,0.5)), url(images/brand/Slider-1-1024x500.jpg) no-repeat;
+   
+}
+body{
+    /** fonts **/
+}
+h1,h2,h3,h4,h5,h6,p{
+    /** fonts **/
+}
+.header-site{
+    background: var(--background-gradient);
+    height: 100vh;
+    width: 100%;
+    background-size: cover;
+    background-position: top;
+}
+.header-site h1{
+    color: white;
+}
+.header-site h1 span{
+    font-size: 2.4rem;
+    color: rgb(172, 45, 45);
+}
+.header-site p{
+    color: white;
+    font-size: 1.4ren;
+}
+.navbar{
+    box-shadow: var(--box-shadow);
+}
+
+.nav-link,.dropdown-item{
+    font-size: 1.0rem;
+}
+.p-txt{
+    font-size: 0.9rem
+}
+.nav-link,.dropdown-item{
+    border-radius: .375rem;
+    transition: padding-left 0.2s ease;
+}
+.nav-link:hover{
+    color: #fff;
+    background-color: var(--gray);
+    padding-left: 25px;
+}
+.dropdown-item:hover{
+    background-color: var(--gray);
+}
+.copyright-txt{
+    font-size: 0.7rem;
+}
+.about{
+    padding-top: 89px;
+}
+#mv{
+    padding-top:146px;
+}
+#services{
+    padding-top: 69px;
+}
+.mv-text ,#contact{
+    background-color: var(--maroon);
+    color: #fff;
+}
+
+/* Task: style need to organize...... */
+
+
+
+/* ================================| Responsive Design |======================================== */
+@media screen and (max-width:576px) {
+    .hidden-on-small-screens { display: none; }
+    .header-site h1 span{ font-size: 2.1rem; }
+    .header-site h1{font-size: 1.2rem;}
+    .header-site p {font-size: 0.9rem;}
+    .p-txt{ font-size: 13.8px; }
+    .img-about{ width: 1px; }
+    .copyright-txt{ font-size: 13px; }
+}
+/** form control style **/
+.form-section{
+    background: var(--background-gradient-form);
+    width: 100%;
+    background-size: cover;
+    background-position: top;
+}
+.form-section{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 110vh;
+}
+.form-section .wrapper{
+    display: flex;
+    justify-content: center;
+    padding: 105px 0;
+    padding-top: 150px;
+    margin: 0 20px;
+    width: 504px;
+}
+.form-section .container {
+    padding: 10px 40px;
+}
+.form-group{
+    padding: 1px 0;
+}
+.wrapper .row h2,h1 {
+    padding: 8px 20px;
+}
+
+/** 404 page **/
+.pnf-section {
+   display: flex;
+   justify-content: center;
+}
+.pnf-section .wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.pnf-section .container{
+    text-align: center;
+}
+.pnf-section .col {
+}
