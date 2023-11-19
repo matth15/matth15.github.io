@@ -77,9 +77,9 @@ class Auth extends Controller
                     if (!$rule->isRequired($email)) {
                         $data['signup-err'] = 'TRACE Email field is Required!';
                     }
-                    // elseif (!$rule->emailUnique($email)) {
-                    //     $data['signup-err'] = $email . ' Email account already exist.';
-                    // } 
+                    elseif (!$rule->unique($email,"email")) {
+                        $data['signup-err'] = $email . ' Email account already exist.';
+                    } 
                     elseif (!$rule->email($email)) {
                         $data['signup-err'] = 'Enter a valid email address';
                     } elseif (!$rule->checkEmailDomain($email, "tracecollege.edu.ph")) {
@@ -144,6 +144,12 @@ class Auth extends Controller
         $data = [];
 
         if ($this->request->isPost()) {
+
+            if ($this->request->data('csrf_token') !== session::generateCsrfToken()) {
+                $this->redirect->to('auth');
+                die;
+            }
+
             // Extract input fields' values
             $email = $this->request->data("email");
             $password = $this->request->data("password");
@@ -196,6 +202,7 @@ class Auth extends Controller
      */
     public function forgot_password()
     {
+        $this->view('Forgot-Password');
     }
 
 
@@ -209,6 +216,10 @@ class Auth extends Controller
         $data = [];
 
         if ($this->request->isPost()) {
+            if ($this->request->data('csrf_token') !== session::generateCsrfToken()) {
+                $this->redirect->to('auth');
+                die;
+            }
             // Extract input fields' values
             $email = $this->request->data("email");
             $otp = $this->request->data("otp_data");
@@ -246,6 +257,10 @@ class Auth extends Controller
      */
     public function resendOTP()
     {
+        if ($this->request->data('csrf_token') !== session::generateCsrfToken()) {
+            $this->redirect->to('auth');
+            die;
+        }
         // Get the user's email from the session or user input
         $email = $this->request->data("email");
 

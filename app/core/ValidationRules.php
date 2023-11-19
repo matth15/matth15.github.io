@@ -152,13 +152,11 @@ public $db;
      * check if a value of a column is unique.
      *
      * @param  string  $value
-     * @param  array   $args(table, column)
+     * @param  array   $col
+     * @param string   $table
      * @return bool
      */
-    public function unique($value, $args){
-
-        $table = $args[0];
-        $col   = $args[1];
+    public function unique($value, $col,$table="students_data"){
 
         $this->db = Database::open_db();
         $this->db->prepare("SELECT * FROM {$table} WHERE {$col} = :{$col}");
@@ -180,7 +178,7 @@ public $db;
         $this->db->execute();
         $user =  $this->db->fetchAssociative();
 
-        return !empty($user['is_email_activated']) ? true : false;
+        return !empty($user['is_email_activated']);
     }
 
     /**

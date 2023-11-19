@@ -16,7 +16,7 @@ include __DIR__.'/partials/Nav.inc.php';
                 //end error display
                 ?>
                   
-                <form action="" method="POST">
+                <form action="<?= baseurl() ?>/auth/forgot_password" method="POST">
                 <input type="hidden" name="csrf_token" value="<?= Session::generateCsrfToken(); ?>">
 
                     <div class="col-12">
