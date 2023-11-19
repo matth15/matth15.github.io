@@ -52,6 +52,11 @@ class Email
 
 
             switch ($type) {
+                /**
+                 * 
+                 * 
+                 * 
+                 */
                 case (Config::get('mailer/email_otp_confirmation')):
                     $mail->Body = Templates::getOtpLoginBody($data);
                     $mail->SetFrom(Config::get('mailer/email_from'), Config::get('mailer/email_from_name'));
@@ -59,34 +64,18 @@ class Email
                     $mail->Subject = Config::get('mailer/email_subject');
                     $mail->AddAddress($email);
                     break;
+                    /**
+                     * 
+                     * 
+                     * 
+                     */
+                    case '';
+                    
             }
 
             $mail->Send();
         } catch (Exception $e) {
             Session::set('danger', 'Message could not be sent. <br> <strong>Mailer Error:</strong> ' . $mail->ErrorInfo);
         }
-    }
-    /**
-     * @access public
-     * 
-     * 
-     */
-    public function sendLoginEmail(){
-
-    }
-    /**
-     * @access public
-     * 
-     */
-    public function sendSignupEmail(){
-        
-    }
-    /**
-     *  @access public
-     * 
-     * 
-     */
-    public function sendStudentAlert(){
-
     }
 }

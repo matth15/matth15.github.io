@@ -8,14 +8,22 @@
     private $method = "index";
     private $params;
 
-
+    /**
+     * 
+     * 
+     * 
+     */
     private function splitURL()
     {
       $URL = $_SERVER['REQUEST_URI'];
       $URL = explode("/", filter_var(trim($URL, "/")), FILTER_SANITIZE_URL);
       return $URL;
     }
-
+    /**
+     * 
+     * 
+     * 
+     */
     public function run()
     {
 
@@ -34,7 +42,7 @@
       $filename = "app/controller/" . ucfirst($URL[0]) . ".php";
 
      
-      var_dump(print_r($idValue));
+      
       //var_dump(print_r($filename));
 
       if (!empty($URL[0])) {

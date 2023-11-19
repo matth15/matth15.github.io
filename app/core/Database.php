@@ -164,6 +164,13 @@ class Database
         $this->execute();
     }
 
+    public function getByUserType($table, $email)
+    {
+        $this->stmt = $this->dbcon->prepare('SELECT * FROM ' . $table . ' WHERE email = :email LIMIT 1');
+        $this->bindValue(':email', $email);
+        $this->execute();
+    }
+
     //Delete all rows from a table
     public function deleteAll($table)
     {

@@ -52,15 +52,15 @@ class Session{
     }
 
     /**
-     * Get User Role
+     * Get User Type
      *
      * @access public
      * @static static method
      * @return string|null
      *
      */
-    public static function getUserRole(){
-        return empty($_SESSION["role"]) ? null : $_SESSION["role"];
+    public static function getUserType(){
+        return empty($_SESSION["user_type"]) ? null : $_SESSION["user_type"];
     }
 
     /**
@@ -211,7 +211,8 @@ class Session{
 
         $_SESSION["is_logged_in"] = true;
         $_SESSION["user_id"]      = (int)$data["user_id"];
-        $_SESSION["role"]         = $data["role"];
+        $_SESSION["user_type"] = $data["user_type"];
+       
 }
 
 

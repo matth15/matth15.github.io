@@ -2,8 +2,9 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-/**
- *   Home Controller
+/**============================
+ *      HOME CONTROLLER
+ * ============================
  */
 
 class Home extends Controller
@@ -23,7 +24,15 @@ class Home extends Controller
    public function index()
    {
       if(Session::getIsLoggedIn()) {
-         print_r('logged in');
+        if(Session::getUserType()=='student'){
+         print_r("logged in by students");
+        }
+        elseif(Session::getUserType()=='admin'){
+         print_r("logged in by admin");
+        }
+        elseif(Session::getUserType()=='teacher'){
+         print_r("logged in by teacher");
+        }
       }
       else {
         $this->view('home');

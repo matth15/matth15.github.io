@@ -17,10 +17,12 @@ include __DIR__.'/partials/Nav.inc.php';
                 ?>
                   
                 <form action="" method="POST">
+                <input type="hidden" name="csrf_token" value="<?= Session::generateCsrfToken(); ?>">
+
                     <div class="col-12">
                         <div class="form-group col-12">
                             <label for="emailInput" class="form-label">Enter your trace email</label>
-                            <input type="email" class="form-control" name="email" id="emailInput" placeholder="Trace email">
+                            <input type="email" class="form-control" name="forgot-email" id="emailInput" placeholder="Trace email">
                         </div>
                         <div class="form-group d-flex justify-content-end  col-12 py-2">
                             <button type="submit" class="btn btn-primary" name="forgot-password_submit">Submit</button>

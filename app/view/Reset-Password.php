@@ -2,7 +2,7 @@
 
 $page_title = "Forgot password";
 require_once __DIR__.'/partials/Header.inc.php';
-include_once __DIR__.'/partials/Nav.inc.php';
+require_once __DIR__.'/partials/Nav.inc.php';
 ?>
 <section class="form-section">
     <div class="wrapper">
@@ -11,11 +11,7 @@ include_once __DIR__.'/partials/Nav.inc.php';
               <h2>
                 New password
               </h2>
-              <?php 
-              //display error
               
-              //end
-              ?>
                 
               <form action="" method="POST">
                 <div class="col-12 p-2">

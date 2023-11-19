@@ -131,6 +131,23 @@ public $db;
     /** ************  Database Validations  *********** **/
     /** *********************************************** **/
 
+
+    /**
+     * this method check if email exist to specific and return fetchAssociative() method
+     * 
+     * @param string $table
+     * @param string $value
+     * @return boolean
+     * 
+     */
+    public function is_email_exist_to($table , $value){
+
+        $this->db->prepare("SELECT * FROM {$table} WHERE email = :email LIMIT 1");
+        $this->db->bindValue(':email', $value);
+        $this->db->execute();
+         return $user =  $this->db->fetchAssociative();
+    }
+
 	/**
      * check if a value of a column is unique.
      *
@@ -151,12 +168,26 @@ public $db;
         return $this->db->countRows() === 0;
 
     }
+    /**
+     * this method check if the email is verified or not
+     * @param $string
+     * @param $string
+     * @return bool
+     */
+    public function is_email_verified($table,$email){
+        $this->db->prepare("SELECT * FROM {$table} WHERE email = :email");
+        $this->db->bindValue(":email", $email);
+        $this->db->execute();
+        $user =  $this->db->fetchAssociative();
+
+        return !empty($user['is_email_activated']) ? true : false;
+    }
 
     /**
      * check if email is unique
      * This will check if email exists and activated.
      *
-     * @param  string  $email
+     * @param  string  $string
      * @return bool
      */
     public function emailUnique($email){
@@ -183,8 +214,8 @@ public $db;
                 // This indicates the email of $user hasn't been verified, and token is expired.
                 if($time_elapsed >= $expiry_time) {
 
-                    // $login = new AuthModel();
-                    // $login->resetEmailVerificationToken($user["id"], false);
+                    //$login = new AuthModel();
+                     //$login->resetEmailVerificationToken($user["id"], false);
                     return true;
 
                 }else {
@@ -208,6 +239,8 @@ public $db;
     public function checkEmailDomain($email,$domain) {
        return substr(strrchr($email, "@"), 1) === $domain ? true : false;
     }
+
+
 
     /** *********************************************** **/
     /** ************    Login Validations   *********** **/

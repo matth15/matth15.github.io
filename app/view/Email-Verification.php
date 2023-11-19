@@ -6,7 +6,7 @@ require_once(__DIR__ . '/partials/Nav.inc.php');
 ?>
 <section class="form-section">
     <?php
-    $userinfo = $this->authmodel->getProfileInfo(Session::getUserId())?  $this->authmodel->getProfileInfo(Session::getUserId()):null;
+    $userinfo = $this->authmodel->getProfileInfo(Session::getUserId()) ?  $this->authmodel->getProfileInfo(Session::getUserId()) : null;
     ?>
     <div class="wrapper">
         <div class="container shadow bg-light rounded-3">
@@ -14,10 +14,10 @@ require_once(__DIR__ . '/partials/Nav.inc.php');
                 <input type="hidden" name="csrf_token" value="<?= Session::generateCsrfToken(); ?>">
                 <input type="hidden" name="email" value="<?= $userinfo['email'] ?>">
                 <h3 class="text-center pt-3"> Email Code Verification</h3>
-                <?php Session::danger('otp-error') ?  Session::danger('otp-error') : ''; ?>
-                <?php Session::success('danger') ?  Session::success('danger') : ''; ?>
-                <?php Session::danger('success') ? Session::danger('success') : ''; ?>
 
+                <?php Session::danger('otp-error') ?  Session::danger('otp-error') : ''; ?>
+                <?php Session::success('success') ?  Session::success('success') : ''; ?>
+                <?php Session::danger('danger') ? Session::danger('danger') : ''; ?>
                 <div class="form-group col-12 py-3 px-3">
                     <input type="text" class="form-control" name="otp_data" id="otpInput" placeholder="Enter code">
                 </div>
@@ -26,6 +26,7 @@ require_once(__DIR__ . '/partials/Nav.inc.php');
                     <button type="submit" class="btn btn-secondary" name="otp_cancel">Cancel</button>
                 </div>
             </form>
+
             <?php
             //
             if (!is_null($userinfo)) {
@@ -45,6 +46,7 @@ require_once(__DIR__ . '/partials/Nav.inc.php');
                     </form>
             <?php }
             } ?>
+
         </div>
     </div>
 </section>

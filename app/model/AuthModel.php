@@ -1,156 +1,233 @@
 <?php
 
-/**
- *  Auth Model
+/**=========================================================
+ *               USER AUTHENTICATION MODEL
+ * =========================================================
  */
 
-class AuthModel extends Model{
+class AuthModel extends Model
+{
+    private $user_table = array("students_data", "teachers_data", "admin");
 
-  
+    //auth model register for students data to database
+    public function register($fullname, $email, $password, $grade_level, $strand)
+    {
 
-    public function register($fullname, $email, $password, $grade_level ,$strand){
-        
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT, array('cost' => Config::get('hashing/hash_cost_factor')));
 
         $this->db->beginTransaction();
-        $query = "INSERT INTO students_data (name, email, password , grade_level ,strand) VALUES (:name, :email, :hashedPassword, :grade_level, :strand)";
+        $query = "INSERT INTO students_data (name, email, password , grade_level ,strand,user_type) VALUES (:name, :email, :hashedPassword, :grade_level, :strand,:user_type)";
 
-         $this->db->prepare($query);
-         $this->db->bindValue(':name', $fullname);
-         $this->db->bindValue(':email', $email);
-         $this->db->bindValue(':hashedPassword', $hashedPassword);
-         $this->db->bindValue(':grade_level', $grade_level);
-         $this->db->bindValue(':strand', $strand);
-         $this->db->execute();
-         $this->db->commit();
+        $this->db->prepare($query);
+        $this->db->bindValue(':name', $fullname);
+        $this->db->bindValue(':email', $email);
+        $this->db->bindValue(':hashedPassword', $hashedPassword);
+        $this->db->bindValue(':grade_level', $grade_level);
+        $this->db->bindValue(':strand', $strand);
+        $this->db->bindValue(':user_type', 'student');
+        $this->db->execute();
+        $this->db->commit();
 
-         return true;
+        return true;
+    }
+    /**
+     * ====================================
+     *        UPDATE USER DATA MODEL
+     * ====================================
+     * PROBLEM: none
+     */
+    public function updateUserData($query, $table, $bindParam, $bindValue)
+    {
+        $newQuery = explode(" ? ", $query);
 
+        for ($i = 0; $i < count($table); $i++) {
+            $esql = $newQuery[0] . ' ' . $table[$i] . ' ' . $newQuery[1];
+            $this->db->prepare($esql);
+            for ($x = 0; $x < count($table); $x++) {
+                $this->db->bindValue($bindParam[$x], $bindValue[$x]);
+            }
+            if ($this->db->execute()) {
+                return true;
+                break;
+            }
+        }
+        return false;
+    }
+    /**
+     * ====================================
+     *          GET USER DATA MODEL
+     * ====================================
+     * PROBLEM: none
+     */
+    public function getUserData($table, $email)
+    {
+        foreach ($table as $val) {
+            $this->db->prepare("SELECT * FROM {$val} WHERE email = :email LIMIT 1");
+            $this->db->bindValue(':email', $email);
+            $this->db->execute();
+            $user =  $this->db->fetchAssociative();
+            if ($user) {
+                return $user;
+                break;
+            }
+        }
+        return false;
     }
 
-   
-     // Signin Logic
-     public function login($email,$password){ 
-        // 1. get user from database
-        $this->db->prepare("SELECT * FROM students_data WHERE email = :email LIMIT 1");
-        $this->db->bindValue(':email', $email);
-        $this->db->execute();
-        $user =  $this->db->fetchAssociative();
+
+    /**
+     * ====================================
+     *         LOGIN MODEL LOGIC
+     * ====================================
+     * PROBLEM: none
+     */
+    public function login($email, $password)
+    {
+
+        // 1. instantiate the validation class
+        $rule = new ValidationRules();
+
+        // chech to the 3 table user if email exist and return user col table
+        $user = $this->getUserData(array("students_data", "teachers_data", "admin"), $email);
 
         //2. Retrieve user data 
-        $userId = isset($user["id"])? $user["id"]: null;
-        $hashedPassword = isset($user["password"])? $user["password"]: null; 
+        $userId = isset($user["id"]) ? $user["id"] : null;
+        $user_type = isset($user['user_type']) ? $user['user_type'] : null;
+        $hashedPassword = isset($user["password"]) ? $user["password"] : null;
 
-       // 3. instantiate the validation class
-
-        $rule = new ValidationRules(); 
-        
         // 4. validate data returned from users table
-        if(!$rule->credentials(["user_id" => $userId, "hashed_password" => $hashedPassword, "password" => $password])){
-          
-          session::set('danger', $email.' does not exist.'); 
+        if (!$rule->credentials(["user_id" => $userId, "hashed_password" => $hashedPassword, "password" => $password])) {
 
-          return false; 
-       } 
+            session::set('danger', $email . ' email account does not exist.');
 
-       //5. Get Logged User session Values.
-       Session::getUserSessions(["user_id" => $userId]);
+            return false;
+        } else {
 
-       //6. If the validation succeeds, return the user data
-       return true;
-   }
+            //5. Get Logged User session Values.
+            Session::getUserSessions(["user_id" => $userId, "user_type" => $user_type]);
 
-   /**
-    * 
-    */
-   function generateOTP($length = 6) {
-    // Define the characters that can be used in the OTP
-    $characters = '0123456789';
-    $otp = '';
-
-    // Generate random OTP
-    for ($i = 0; $i < $length; $i++) {
-        $otp .= $characters[rand(0, strlen($characters) - 1)];
+            //6. If the validation succeeds, return the user data
+            return true;
+        }
     }
 
-    return $otp;
-}
+    /**
+     * ====================================
+     *          GENERATED OTP MODEL
+     * ====================================
+     * PROBLEM: none
+     */
+    function generateOTP($length = 6)
+    {
+        // Define the characters that can be used in the OTP
+        $characters = '0123456789';
+        $otp = '';
 
+        // Generate random OTP
+        for ($i = 0; $i < $length; $i++) {
+            $otp .= $characters[rand(0, strlen($characters) - 1)];
+        }
 
-    public function updateGeneratedOTP($email, $otp, $otp_expiration) {
+        return $otp;
+    }
+
+    /**
+     * ====================================
+     *      UPDATE GENERATED OTP MODEL
+     * ====================================
+     * PROBLEM : none
+     */
+    public function updateGeneratedOTP($email, $otp, $otp_expiration)
+    {
         $this->db->beginTransaction();
-  
-        $query = "UPDATE students_data SET otp = :otp, otp_expiration = :otp_expiration WHERE email = :email";
-  
-        $this->db->prepare($query);
-        $this->db->bindValue(":otp", $otp);
-        $this->db->bindValue(":otp_expiration", $otp_expiration);
-        $this->db->bindValue(":email", $email);
-        $this->db->execute();
-        
+
+
+        $query = "UPDATE ? SET otp = :otp, otp_expiration = :otp_expiration WHERE email = :email";
+        $bindParam = array(":otp", ":otp_expiration", ":email");
+        $bindValue = array($otp, $otp_expiration, $email);
+        $con = $this->updateUserData($query, $this->user_table, $bindParam, $bindValue);
         $this->db->commit();
-        return true;
+        return $con;
     }
 
-
-    public function updateOTP($email) {
+    /**
+     * ====================================
+     *          UPDATE OTP MODEL
+     * ====================================
+     * PROBLEM: none
+     */
+    public function updateOTP($email)
+    {
         $this->db->beginTransaction();
-  
-        $query = "UPDATE users SET otp = NULL, otp_expiration = NULL WHERE email = :email";
-  
-        $this->db->prepare($query);
-        $this->db->bindValue(":email", $email);
-        $this->db->execute();
-        
+
+        $query = "UPDATE ? SET otp = NULL, otp_expiration = NULL WHERE email = :email";
+        $bindParam = array(":email");
+        $bindValue = array($email);
+        $con = $this->updateUserData($query, $this->user_table, $bindParam, $bindValue);
         $this->db->commit();
-        return true;
+        return $con;
     }
 
-   
-    public function verifyOTP($email, $enteredOTP){
+    /**
+     * ====================================
+     *            VERIFY OTP MODEL
+     * ====================================
+     * PROBLEM : none
+     */
+    public function verifyOTP($email, $enteredOTP)
+    {
         // 1. Get the user's stored OTP from the database
-        $this->db->prepare("SELECT * FROM students_data WHERE email = :email LIMIT 1");
-        $this->db->bindValue(':email', $email);
-        $this->db->execute();
-        $user = $this->db->fetchAssociative();
-    
-        // 2. return stored OTP expiration 
-         $otpExpiration = isset($user["otp_expiration"]) ? strtotime($user["otp_expiration"]) : null;
-           
+        $user = $this->getUserData(array("students_data", "teachers_data", "admin"), $email);
 
-       // 3. Check OTP expiration
+        // 2. return stored OTP expiration 
+        $otpExpiration = isset($user["otp_expiration"]) ? strtotime($user["otp_expiration"]) : null;
+
+
+        // 3. Check OTP expiration
         if ($otpExpiration !== null && time() > $otpExpiration) {
-            session::set('danger', 'OTP has expired. Please request a new OTP.'); 
+            session::set('danger', 'OTP has expired. Please request a new OTP.');
             return false;
         }
 
-         // 4. Compare the entered OTP with the stored OTP
-         $storedOTP = isset($user["otp"]) ? $user["otp"] : null;    
+        // 4. Compare the entered OTP with the stored OTP
+        $storedOTP = isset($user["otp"]) ? $user["otp"] : null;
         if ($enteredOTP === $storedOTP) {
             // OTP is correct, return true
             $this->updateOTP($email);
             return true;
-        } 
+        }
     }
 
-
-    public function getProfileInfo($userId){
+    /**
+     * ====================================
+     *       GET PROFILE INFO MODEL       |
+     * ====================================
+     * PROBLEM : none
+     */
+    public function getProfileInfo($userId)
+    {
 
         // 
         $this->db->getById("students_data", $userId);
 
         // Check if the user exists
-        if($this->db->countRows() !== 1){
+        if ($this->db->countRows() !== 1) {
             // You may want to handle the case where the user doesn't exist
             return null;
         }
 
         return $user = $this->db->fetchAssociative();
-      }
-      
-    //Logout Logic
+    }
 
-    public function logout( $userId){
+    /**
+     * ====================================
+     *       LOGOUT SESSION ACCOUNT       
+     * ====================================
+     *  PROBLEM : none
+     *  
+     */
+    public function logout($userId)
+    {
         Session::init();
         // Unset all session variables
         $_SESSION = [];
@@ -158,5 +235,4 @@ class AuthModel extends Model{
         // Destroy the session
         session_destroy();
     }
-
 }

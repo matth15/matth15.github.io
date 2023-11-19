@@ -16,7 +16,7 @@ require_once(__DIR__.'/partials/Nav.inc.php');
         <?php Session::danger('login-error') ? Session::success('login-error') : '' ?>
         <?php Session::success('success') ? Session::success('success') : '' ?>
         <?php Session::danger('danger') ? Session::danger('danger') : '' ?>
-          <!-- <input type="hidden" name="csrf_token" value="<?= Session::generateCsrfToken(); ?>"> -->
+           <input type="hidden" name="csrf_token" value="<?= Session::generateCsrfToken(); ?>"> 
           <div class="col-12">
             <div class="form-group col-12">
               <label for="emailInput" class="form-label ">Trace email</label>
