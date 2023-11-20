@@ -13,9 +13,8 @@ require_once(__DIR__.'/partials/Nav.inc.php');
           Login
         </h1>
         <form action="<?= baseurl() ?>/auth/login/" method="POST">
-        <?php Session::danger('login-error') ? Session::success('login-error') : '' ?>
-        <?php Session::success('success') ? Session::success('success') : '' ?>
-        <?php Session::danger('danger') ? Session::danger('danger') : '' ?>
+        <?php Session::danger('LOGIN-ERROR') ? Session::danger('LOGIN-ERROR') : '' ?>
+        <?php Session::success('LOGIN-SUCCESS') ? Session::success('LOGIN-SUCCESS') : '' ?>
            <input type="hidden" name="csrf_token" value="<?= Session::generateCsrfToken(); ?>"> 
           <div class="col-12">
             <div class="form-group col-12">
@@ -33,7 +32,7 @@ require_once(__DIR__.'/partials/Nav.inc.php');
             <div class="form-group d-grid col-12 py-3">
               <button type="submit" class="btn btn-primary" name="login_submit">Login</button>
             </div>
-            <a href="<?= baseurl()?>/auth/forgot_password">Forgot password?</a>
+            <a href="<?= baseurl()?>/account/forgot_password">Forgot password?</a>
           </div>
         </form>
       </div>

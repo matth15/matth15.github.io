@@ -132,6 +132,8 @@ public $db;
     /** *********************************************** **/
 
 
+
+
     /**
      * this method check if email exist to specific and return fetchAssociative() method
      * 
@@ -234,7 +236,7 @@ public $db;
      * @return bool
      * 
      */
-    public function checkEmailDomain($email,$domain) {
+    public function checkEmailDomain($email,$domain = "tracecollege.edu.ph") {
        return substr(strrchr($email, "@"), 1) === $domain ? true : false;
     }
 

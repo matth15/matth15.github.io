@@ -13,10 +13,9 @@ require_once(__DIR__ . '/partials/Nav.inc.php');
             <div class="row px-1 py-2 p-sm-4">
                 <h2 class="py-4">SIGN UP</h2>
                 <!-- start error display -->
-                <?php Session::warning('signup-error-domain') ? Session::warning('signup-error-domain') : '' ?>
-                <?php Session::danger('signup-error') ? Session::success('signup-error') : '' ?>
-                <?php Session::success('success') ? Session::success('success') : '' ?>
-                <?php Session::danger('danger') ? Session::danger('danger') : '' ?>
+                <?php Session::warning('SIGNUP-WARNING') ? Session::warning('SIGNUP-WARNING') : '' ?>
+                <?php Session::danger('SIGNUP-ERROR') ? Session::success('SIGNUP-ERROR') : '' ?>
+                <?php Session::success('SIGNUP-SUCCESS') ? Session::success('SIGNUP-SUCCESS') : '' ?>
                 <!-- end error display -->
                 <div class="col-sm-6 col-12">
                     <label for="firstName" class="form-label">First name</label>

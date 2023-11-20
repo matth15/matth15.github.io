@@ -76,11 +76,7 @@ class Auth extends Controller
                     // Validate email field
                     if (!$rule->isRequired($email)) {
                         $data['signup-err'] = 'TRACE Email field is Required!';
-                    }
-                    elseif (!$rule->unique($email,"email")) {
-                        $data['signup-err'] = $email . ' Email account already exist.';
-                    } 
-                    elseif (!$rule->email($email)) {
+                    } elseif (!$rule->email($email)) {
                         $data['signup-err'] = 'Enter a valid email address';
                     } elseif (!$rule->checkEmailDomain($email, "tracecollege.edu.ph")) {
                         $data['signup-err-domain'] = 'Only TRACE Email domain can access signup form.';
@@ -112,9 +108,9 @@ class Auth extends Controller
             }
             if (!empty($data)) {
                 if (!empty($data['signup-err-domain'])) {
-                    Session::set('signup-error-domain', $data['signup-err-domain']);
+                    Session::set('SIGNUP-WARNING', $data['SIGNUP-WARNING']);
                 } else {
-                    Session::set('signup-error', $data['signup-err']);
+                    Session::set('SIGNUP-ERROR', $data['SIGNUP-ERROR']);
                 }
             }
 
@@ -123,7 +119,7 @@ class Auth extends Controller
                 //modify
                 $result = $this->authmodel->register($firstname . ' ' . $lastname, $email, $password, $gradeLevel, $strand);
                 if ($result) {
-                    Session::set('success', 'Registration successful.');
+                    Session::set('LOGIN-SUCCESS', 'Registration successful.');
                     $this->redirect->to('auth/login');
                     die();
                 }
@@ -169,7 +165,7 @@ class Auth extends Controller
                 }
             }
             if (!empty($data)) {
-                Session::set('login-error', $data['login-err']);
+                Session::set('LOGIN-ERROR', $data['login-err']);
             }
             //
             if (empty($data)) {
@@ -183,28 +179,18 @@ class Auth extends Controller
                     if ($result) {
                         $data = ['email' => $email, 'otp' => $otp];
                         Email::sendEmail(Config::get('mailer/email_otp_confirmation'),  $email,  $otp, $data);
+
                         // Redirect to OTP verification view
+                        Session::set('OTP-SUCCESS', "We've sent an OTP Code Verification from your TRACE E-mail -" . $email);
                         $this->redirect->to('auth/verifyOTP');
                     }
                 }
             }
         }
-        
+
 
         $this->view('Login', $data);
     }
-
-
-    /*
-     * =============================================================================================================================================
-     *  
-     * =============================================================================================================================================
-     */
-    public function forgot_password()
-    {
-        $this->view('Forgot-Password');
-    }
-
 
     /*
      * ===================================================
@@ -213,6 +199,7 @@ class Auth extends Controller
      */
     public function verifyOTP()
     {
+
         $data = [];
 
         if ($this->request->isPost()) {
@@ -224,8 +211,10 @@ class Auth extends Controller
             $email = $this->request->data("email");
             $otp = $this->request->data("otp_data");
 
+
+
             $cancel = $this->request->data('otp_cancel');
-            
+
             // Instantiate validation rules
             $rule = new ValidationRules();
 
@@ -235,14 +224,17 @@ class Auth extends Controller
             }
 
             if (!empty($data['otp-err'])) {
-                Session::set('otp-error', $data['otp-err']);
+                Session::set('OTP-ERROR', $data['otp-err']);
             }
             if (empty($data)) {
                 // Verify OTP
                 if ($this->authmodel->verifyOTP($email, $otp)) {
-                    // OTP is correct, proceed with login
-
-                    $this->redirect->to('auth/login');
+                    if(Session::getAndDestroy('forgot-password-process')){
+                        $this->redirect->to('account/reset_password');
+                    }
+                    Session::set('LOGIN-SUCCESS','Login Successfully!');
+                    // Session::setLoggedInSession(); // TO set logged in session 
+                    $this->redirect->to('auth');
                 }
             }
         }
@@ -275,7 +267,7 @@ class Auth extends Controller
             // Send the new OTP to the user's email
             $data = ['email' => $email, 'otp' => $otp];
             Email::sendEmail(Config::get('mailer/email_otp_confirmation'), $email, $otp, $data);
-            session::set('success', 'New OTP have been sent to your email.');
+            session::set('OTP-SUCCESS', 'New OTP have been sent to your email.');
             $this->redirect->to('auth/verifyOTP');
         }
 

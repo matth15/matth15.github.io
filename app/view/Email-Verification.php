@@ -6,7 +6,8 @@ require_once(__DIR__ . '/partials/Nav.inc.php');
 ?>
 <section class="form-section">
     <?php
-    $userinfo = $this->authmodel->getProfileInfo(Session::getUserId()) ?  $this->authmodel->getProfileInfo(Session::getUserId()) : null;
+    $userinfo = $this->authmodel->getProfileInfo(Session::getUserEmail()) 
+    ?  $this->authmodel->getProfileInfo(Session::getUserEmail()) : null;
     ?>
     <div class="wrapper">
         <div class="container shadow bg-light rounded-3">
@@ -14,10 +15,8 @@ require_once(__DIR__ . '/partials/Nav.inc.php');
                 <input type="hidden" name="csrf_token" value="<?= Session::generateCsrfToken(); ?>">
                 <input type="hidden" name="email" value="<?= $userinfo['email'] ?>">
                 <h3 class="text-center pt-3"> Email Code Verification</h3>
-
-                <?php Session::danger('otp-error') ?  Session::danger('otp-error') : ''; ?>
-                <?php Session::success('success') ?  Session::success('success') : ''; ?>
-                <?php Session::danger('danger') ? Session::danger('danger') : ''; ?>
+                <?php Session::success('OTP-SUCCESS') ?  Session::success('OTP-SUCCESS') : ''; ?>
+                <?php Session::danger('OTP-ERROR') ? Session::danger('OTP-ERROR') : ''; ?>
                 <div class="form-group col-12 py-3 px-3">
                     <input type="text" class="form-control" name="otp_data" id="otpInput" placeholder="Enter code">
                 </div>

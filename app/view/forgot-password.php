@@ -10,15 +10,11 @@ include __DIR__.'/partials/Nav.inc.php';
                 <h2>
                     Forgot password
                 </h2>
-                <?php
-                //error display
-               
-                //end error display
-                ?>
-                  
+
                 <form action="<?= baseurl() ?>/auth/forgot_password" method="POST">
                 <input type="hidden" name="csrf_token" value="<?= Session::generateCsrfToken(); ?>">
-
+                <?php Session::success('FORGOT-PASSWORD-SUCCESS') ?  Session::success('FORGOT-PASSWORD-SUCCESS') : ''; ?>
+                <?php Session::danger('FORGOT-PASSWORD-DANGER') ?  Session::danger('FORGOT-PASSWORD-DANGER') : ''; ?>
                     <div class="col-12">
                         <div class="form-group col-12">
                             <label for="emailInput" class="form-label">Enter your trace email</label>

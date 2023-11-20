@@ -10,4 +10,6 @@ class Model extends Database{
     {
         $this->db = Database::open_db();
     }
+    
+    
 }
