@@ -175,7 +175,6 @@ class Auth extends Controller
             if (empty($data)) {
                 // Check the password against the database
                 if ($this->authmodel->login($email, $password)) {
-
                     // Password is correct, proceed to generate and send OTP
                     $otp = $this->authmodel->generateOTP();
                     $otp_expiration = date("Y-m-d H:i", strtotime(date('Y-m-d H:i') . " +1 mins"));
@@ -190,6 +189,7 @@ class Auth extends Controller
                 }
             }
         }
+        
 
         $this->view('Login', $data);
     }
@@ -241,6 +241,7 @@ class Auth extends Controller
                 // Verify OTP
                 if ($this->authmodel->verifyOTP($email, $otp)) {
                     // OTP is correct, proceed with login
+
                     $this->redirect->to('auth/login');
                 }
             }

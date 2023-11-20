@@ -30,12 +30,25 @@ class AuthModel extends Model
 
         return true;
     }
+    
     /**
      * ====================================
      *        UPDATE USER DATA MODEL
      * ====================================
      * PROBLEM: none
      */
+
+
+     /**
+      * it return true if the update process for user data in specific table in execute bool
+      * 
+      * @param string $query 
+      * @param array  $table 
+      * @param array  $bindParam 
+      * @param array  $bindValue
+      *
+      * @return bool  true|false
+      */
     public function updateUserData($query, $table, $bindParam, $bindValue)
     {
         $newQuery = explode(" ? ", $query);
@@ -87,7 +100,7 @@ class AuthModel extends Model
         // 1. instantiate the validation class
         $rule = new ValidationRules();
 
-        // chech to the 3 table user if email exist and return user col table
+        // check to the 3 table user if email exist and return user col table
         $user = $this->getUserData(array("students_data", "teachers_data", "admin"), $email);
 
         //2. Retrieve user data 
@@ -97,19 +110,47 @@ class AuthModel extends Model
 
         // 4. validate data returned from users table
         if (!$rule->credentials(["user_id" => $userId, "hashed_password" => $hashedPassword, "password" => $password])) {
-
             session::set('danger', $email . ' email account does not exist.');
-
             return false;
         } else {
-
             //5. Get Logged User session Values.
-            Session::getUserSessions(["user_id" => $userId, "user_type" => $user_type]);
+            // Session::getUserSessions(["user_id" => $userId, "user_type" => $user_type]);
 
             //6. If the validation succeeds, return the user data
             return true;
         }
     }
+
+    /**
+     * ====================================
+     *            VERIFY OTP MODEL
+     * ====================================
+     * PROBLEM : none
+     */
+    public function verifyOTP($email, $enteredOTP)
+    {
+        // 1. Get the user's stored OTP from the database
+        $user = $this->getUserData(array("students_data", "teachers_data", "admin"), $email);
+
+        // 2. return stored OTP expiration 
+        $otpExpiration = isset($user["otp_expiration"]) ? strtotime($user["otp_expiration"]) : null;
+
+
+        // 3. Check OTP expiration
+        if ($otpExpiration !== null && time() > $otpExpiration) {
+            session::set('danger', 'OTP has expired. Please request a new OTP.');
+            return false;
+        }
+
+        // 4. Compare the entered OTP with the stored OTP
+        $storedOTP = isset($user["otp"]) ? $user["otp"] : null;
+        if ($enteredOTP === $storedOTP) {
+            // OTP is correct, return true
+            $this->updateOTP($email);
+            return true;
+        }
+    }
+
 
     /**
      * ====================================
@@ -168,35 +209,6 @@ class AuthModel extends Model
         return $con;
     }
 
-    /**
-     * ====================================
-     *            VERIFY OTP MODEL
-     * ====================================
-     * PROBLEM : none
-     */
-    public function verifyOTP($email, $enteredOTP)
-    {
-        // 1. Get the user's stored OTP from the database
-        $user = $this->getUserData(array("students_data", "teachers_data", "admin"), $email);
-
-        // 2. return stored OTP expiration 
-        $otpExpiration = isset($user["otp_expiration"]) ? strtotime($user["otp_expiration"]) : null;
-
-
-        // 3. Check OTP expiration
-        if ($otpExpiration !== null && time() > $otpExpiration) {
-            session::set('danger', 'OTP has expired. Please request a new OTP.');
-            return false;
-        }
-
-        // 4. Compare the entered OTP with the stored OTP
-        $storedOTP = isset($user["otp"]) ? $user["otp"] : null;
-        if ($enteredOTP === $storedOTP) {
-            // OTP is correct, return true
-            $this->updateOTP($email);
-            return true;
-        }
-    }
 
     /**
      * ====================================
