@@ -1,11 +1,11 @@
 <?php
 
 $page_title = "Home";
-require_once __DIR__.'/partials/Header.inc.php'; //HEADER
+require_once __DIR__ . '/partials/Header.inc.php'; //HEADER
 ?>
 <header class="header-site d-flex flex-column justify-content-center" id="home">
   <?php
-  require_once(__DIR__.'/partials/Nav.inc.php') //NABAR
+  require_once(__DIR__ . '/partials/Nav.inc.php') //NABAR
   ?>
   <div class="container pt-5 ">
     <div class="col-12 col-lg-7">
@@ -146,16 +146,11 @@ require_once __DIR__.'/partials/Header.inc.php'; //HEADER
         </div>
        </div>
       </section> SERVICES -->
-      
-  <section class="text-light" id="contact">
-    <div class="container py-5">
-      <h2 class="text-center mb-4 mb-md-5 fs-2">
-        <strong>Contact</strong>
-      </h2>
 
-    </div>
+  <section class="contact-section text-light" id="contact">
+   
   </section> <!-- CONTACT -->
 </main>
 <?php
-require_once(__DIR__.'/partials/Footer.inc.php');
+require_once(__DIR__ . '/partials/Footer.inc.php');
 ?>

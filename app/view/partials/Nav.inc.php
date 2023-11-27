@@ -25,6 +25,9 @@
         <li class="nav-item">
           <a href="<?= baseurl() ?>/home?id=contact" class="nav-link">Contact</a>
         </li>
+        <li class="nav-item">
+          <a href="<?= baseurl() ?>/home?id=team" class="nav-link">Team</a>
+        </li>
       </ul>
 
       <div class="d-flex flex-lg-row flex-md-column flex-sm-row  ">

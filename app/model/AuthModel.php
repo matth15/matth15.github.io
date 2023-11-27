@@ -7,7 +7,7 @@
 
 class AuthModel extends Model
 {
-    private $user_table = array("students_data", "teachers_data", "admin");
+    // private $user_table = array("admin", "students_data", "teachers_data");
 
     //auth model register for students data to database
     /**
@@ -55,8 +55,8 @@ class AuthModel extends Model
      * it return true if the update process for user data in specific table in execute bool
      * 
      * @param string $query 
-     * @param array  $table 
      * @param array  $bindParam 
+     * @param array  $table 
      * @param array  $bindValue
      *
      * @return bool  true|false
@@ -64,16 +64,18 @@ class AuthModel extends Model
     public function updateUserData($query, $table, $bindParam, $bindValue)
     {
         $newQuery = explode(" ? ", $query);
-
+        //iterate 3x
         for ($i = 0; $i < count($table); $i++) {
+
             $esql = $newQuery[0] . ' ' . $table[$i] . ' ' . $newQuery[1];
             $this->db->prepare($esql);
+
+            //iterate 3x
             for ($x = 0; $x < count($bindParam); $x++) {
                 $this->db->bindValue($bindParam[$x], $bindValue[$x]);
             }
             if ($this->db->execute()) {
                 return true;
-                break;
             }
         }
         return false;
@@ -84,8 +86,9 @@ class AuthModel extends Model
      * ====================================
      * PROBLEM: none
      */
-    public function fetchUserData($table, $email)
+    public function fetchUserData($email)
     {
+        $table = ["students_data", "teachers_data", "admin"];
         foreach ($table as $val) {
             $this->db->prepare("SELECT * FROM {$val} WHERE email = :email LIMIT 1");
             $this->db->bindValue(':email', $email);
@@ -93,12 +96,31 @@ class AuthModel extends Model
             $user =  $this->db->fetchAssociative();
             if ($user) {
                 return $user;
-                break;
             }
         }
         return false;
     }
 
+    /**
+     * 
+     * 
+     * 
+     * 
+     */
+    public function setUserVerified($email)
+    {
+        $table = ["students_data", "teachers_data", "admin"];
+        $activator = 1;
+        foreach ($table as $i) {
+            $this->db->prepare("UPDATE {$i} SET is_email_activated = :activate WHERE email = :email LIMIT 1");
+            $this->db->bindValue(':activate', $activator);
+            $this->db->bindValue(':email', $email);
+            if ($this->db->execute()) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * ====================================
@@ -113,7 +135,7 @@ class AuthModel extends Model
         $rule = new ValidationRules();
 
         // check to the 3 table user if email exist and return user col table
-        $user = $this->fetchUserData(array("students_data", "teachers_data", "admin"), $email);
+        $user = $this->fetchUserData($email);
 
         //2. Retrieve user data 
         $userId = isset($user["id"]) ? $user["id"] : null;
@@ -121,10 +143,16 @@ class AuthModel extends Model
         $hashedPassword = isset($user["password"]) ? $user["password"] : null;
 
         // 4. validate data returned from users table
+        if (empty($user['email'])) {
+            Session::set('LOGIN-ERROR', "Failed to log in. TRACE Email not found!");
+            return false;
+        }
+
         if (!$rule->credentials(["user_id" => $userId, "hashed_password" => $hashedPassword, "password" => $password])) {
-            session::set('LOGIN-ERROR', 'Incorrect Password or TRACE E-mail. Please try again.');
+            session::set('LOGIN-ERROR', 'Incorrect Password or TRACE E-mail address. Please try again.');
             return false;
         } else {
+
             //5. Get Logged User session Values.
             Session::getUserSessions(["user_id" => $userId, "user_type" => $user_type, "user_email" => $email]);
             //6. If the validation succeeds, return the user data
@@ -136,8 +164,25 @@ class AuthModel extends Model
      *           RESET PASSWORD MODEL
      * =========================================
      */
-    public function reset_password($np, $ncp)
+    public function reset_password($np, $email)
     {
+        $newPassword = password_hash($np, PASSWORD_DEFAULT);
+        $table = ["students_data","teachers_data","admin"];
+        try {
+            foreach($table as $val) {
+            $sql = "UPDATE {$val} SET password = :password WHERE email = :email";
+            $this->db->prepare($sql);
+            $this->db->bindValue(':email', $email);
+            $this->db->bindValue(':password', $newPassword);
+            if ($this->db->execute()) {
+                return true;
+            }
+        }
+        } catch (PDOException $e) {
+            $e->getMessage();
+            return false;
+        }
+        return false;
     }
     /**
      * ========================================
@@ -146,6 +191,14 @@ class AuthModel extends Model
      */
     public function forgot_password($email)
     {
+        $userData = $this->fetchUserData($email);
+
+        $userEmail = isset($userData['email']) ? $userData['email'] : NULL;
+        if (!empty($userEmail)) {
+            Session::getUserSessions(["user_email" => $email]);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -157,11 +210,10 @@ class AuthModel extends Model
     public function verifyOTP($email, $enteredOTP)
     {
         // 1. Get the user's stored OTP from the database
-        $user = $this->fetchUserData(array("students_data", "teachers_data", "admin"), $email);
+        $user = $this->fetchUserData($email);
 
         // 2. return stored OTP expiration 
         $otpExpiration = isset($user["otp_expiration"]) ? strtotime($user["otp_expiration"]) : null;
-
 
         // 3. Check OTP expiration
         if ($otpExpiration !== null && time() > $otpExpiration) {
@@ -170,7 +222,6 @@ class AuthModel extends Model
         }
         // 4. Compare the entered OTP with the stored OTP
         $storedOTP = isset($user["otp"]) ? $user["otp"] : null;
-        print_r($storedOTP . ' ' . $enteredOTP);
         if ($enteredOTP == $storedOTP) {
 
             // OTP is correct, return true
@@ -180,9 +231,8 @@ class AuthModel extends Model
 
             $this->updateOTP($email);
             return true;
-        }
-        else {
-            Session::set('OTP-ERROR',"Invalid OTP Code!");
+        } else {
+            Session::set('OTP-ERROR', "Invalid OTP Code!");
         }
     }
 
@@ -215,15 +265,23 @@ class AuthModel extends Model
      */
     public function updateGeneratedOTP($email, $otp, $otp_expiration)
     {
-        $this->db->beginTransaction();
+        try {
+            $this->db->beginTransaction();
+            $table = ["students_data", "teachers_data", "admin"];
+            foreach ($table as $t) {
 
-
-        $query = "UPDATE ? SET otp = :otp, otp_expiration = :otp_expiration WHERE email = :email";
-        $bindParam = array(":otp", ":otp_expiration", ":email");
-        $bindValue = array($otp, $otp_expiration, $email);
-        $con = $this->updateUserData($query, $this->user_table, $bindParam, $bindValue);
-        $this->db->commit();
-        return $con;
+                $this->db->prepare("UPDATE {$t} SET otp = :otp , otp_expiration = :otp_expiration WHERE email = :email");
+                $this->db->bindValue(":otp", $otp);
+                $this->db->bindValue(":otp_expiration", $otp_expiration);
+                $this->db->bindValue(":email", $email);
+                $this->db->execute();
+            }
+            $this->db->commit();
+        } catch (PDOException $e) {
+            var_dump(print_r($e->getMessage()));
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -239,7 +297,7 @@ class AuthModel extends Model
         $query = "UPDATE ? SET otp = NULL, otp_expiration = NULL WHERE email = :email";
         $bindParam = array(":email");
         $bindValue = array($email);
-        $con = $this->updateUserData($query, $this->user_table, $bindParam, $bindValue);
+        $con = $this->updateUserData($query, ["students_data", "teachers_data", "admin"], $bindParam, $bindValue);
         $this->db->commit();
         return $con;
     }
@@ -253,10 +311,10 @@ class AuthModel extends Model
      */
     public function getProfileInfo($email)
     {
-
+        $table = ["students_data", "teachers_data", "admin"];
         // 
-        for ($i = 0; $i < count($this->user_table); $i++) {
-            $this->db->getByUserEmail($this->user_table[$i], $email);
+        for ($i = 0; $i < count($table); $i++) {
+            $this->db->getByUserEmail($table[$i], $email);
             // Check if the user exists
             if ($this->db->countRows() > 0) {
                 return $user = $this->db->fetchAssociative();

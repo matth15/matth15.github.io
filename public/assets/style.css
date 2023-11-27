@@ -132,3 +132,62 @@ h1,h2,h3,h4,h5,h6,p{
 }
 .pnf-section .col {
 }
+
+/** CONTACT **/
+.contact-section {
+    padding: 58px 0;
+    height: 50vh;
+}
+
+
+/** TEAM PROFILE **/
+
+.team-section{
+    width: 100%;
+    min-height: 150vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.team-section .wrapper{
+    display: flex;
+    justify-content: center;
+}
+.team-section .container{
+    padding: 50px;
+
+}
+
+/** LOGIN FORM **/
+.form-section .password-container {
+    position:relative;
+}
+.form-section #passwordInput{
+    box-sizing: border-box;
+    padding-right: 50px;
+}
+.form-section .form-group .fa-eye,.fa-eye-slash {
+    position: absolute;
+    top:43%;
+    right: 4%;
+    cursor: pointer;
+    color: lightslategray
+}
+.form-section .signup-form {
+    position: relative;
+}
+.form-section .signup-form #createPassword{
+    box-sizing: border-box;
+    padding-right: 45px;
+}
+.form-section .signup-form .fa-eye,.signup-form .fa-eye-slash {
+    position: absolute;
+    top: 62%;
+    right: 9%;
+    cursor: pointer;
+    color: lightslategray
+}
+
+
+/** SIGNUP FORM **/
+

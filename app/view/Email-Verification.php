@@ -6,9 +6,10 @@ require_once(__DIR__ . '/partials/Nav.inc.php');
 ?>
 <section class="form-section">
     <?php
-    $userinfo = $this->authmodel->getProfileInfo(Session::getUserEmail()) 
-    ?  $this->authmodel->getProfileInfo(Session::getUserEmail()) : null;
+    $userinfo = $this->authmodel->getProfileInfo(Session::getUserEmail())
+        ?  $this->authmodel->getProfileInfo(Session::getUserEmail()) : null;
     ?>
+    
     <div class="wrapper">
         <div class="container shadow bg-light rounded-3">
             <form action="" method="post">
@@ -31,7 +32,7 @@ require_once(__DIR__ . '/partials/Nav.inc.php');
             if (!is_null($userinfo)) {
                 $otpExpiration = strtotime($userinfo['otp_expiration']);
                 //
-                if ($otpExpiration && time() > $otpExpiration && $otpExpiration) {
+                if ($otpExpiration && time() > $otpExpiration) {
             ?>
                     <form action="<?= baseurl() ?>/auth/resendOTP" method="post">
                         <div class="resend-otp d-flex justify-content-center py-2 ">

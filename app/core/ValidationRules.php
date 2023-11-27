@@ -1,38 +1,40 @@
 <?php
 
-class ValidationRules {
+class ValidationRules
+{
 
-public $db;
-	/** *********************************************** **/
+    public $db;
+    /** *********************************************** **/
     /** **************    Validations    ************** **/
     /** *********************************************** **/
 
-/**
+    /**
      * Determine if a given value has 'required' rule
      *
      * @param  array  $value
      * @return bool
      */
-	public static function isRequired($value){
+    public static function isRequired($value)
+    {
         if (filter_var($value, FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
-			return true;
-		}
-		return false;	
-		
+            return true;
+        }
+        return false;
     }
 
-	/**
+    /**
      * check if value is a valid email
      *
      * @param  string  $email
      * @return bool
      */
-    public static function email($email){
+    public static function email($email)
+    {
         return filter_var($email, FILTER_VALIDATE_EMAIL);
     }
 
 
-	/**
+    /**
      * min string length
      *
      * @param  string  $str
@@ -41,12 +43,13 @@ public $db;
      * @return bool
      */
 
-    public static function minLen($str, $args){
-  
-		return mb_strlen($str, 'UTF-8') >= (int)$args;
+    public static function minLen($str, $args)
+    {
+
+        return mb_strlen($str, 'UTF-8') >= (int)$args;
     }
 
-	/**
+    /**
      * max string length
      *
      * @param  string  $str
@@ -54,27 +57,30 @@ public $db;
      *
      * @return bool
      */
-    public static function maxLen($str, $args){
+    public static function maxLen($str, $args)
+    {
         return mb_strlen($str, 'UTF-8') <= (int)$args;
     }
 
-	/**
+    /**
      * check if value is a valid number
      *
      * @param  string|integer  $value
      * @return bool
      */
-	public static function integer($value){
+    public static function integer($value)
+    {
         return filter_var($value, FILTER_VALIDATE_INT);
     }
 
-	/**
+    /**
      * check if value is contains alphabetic characters and numbers
      *
      * @param  mixed   $value
      * @return bool
      */
-	public static function alphaNum($value){
+    public static function alphaNum($value)
+    {
         return preg_match('/\A[a-z0-9]+\z/i', $value);
     }
 
@@ -84,7 +90,8 @@ public $db;
      * @param  mixed   $value
      * @return bool
      */
-	public static function alphaNumWithSpaces($value){
+    public static function alphaNumWithSpaces($value)
+    {
         return preg_match('/\A[a-z0-9 ]+\z/i', $value);
     }
 
@@ -100,7 +107,8 @@ public $db;
      * @see http://stackoverflow.com/questions/8141125/regex-for-password-php
      * @see http://code.runnable.com/UmrnTejI6Q4_AAIM/how-to-validate-complex-passwords-using-regular-expressions-for-php-and-pcre
      */
-    public static function password($value) {
+    public static function password($value)
+    {
         return preg_match_all('$\S*(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$', $value);
     }
 
@@ -111,7 +119,8 @@ public $db;
      * @param  array   $args(value)
      * @return bool
      */
-    public function equals($value, $args){
+    public function equals($value, $args)
+    {
         return $value === $args[0];
     }
 
@@ -122,12 +131,13 @@ public $db;
      * @param  array   $args(value)
      * @return bool
      */
-	public static function notEqual($value, $args){
+    public static function notEqual($value, $args)
+    {
         return $value !==  $args[0];
     }
 
-	
-	 /** *********************************************** **/
+
+    /** *********************************************** **/
     /** ************  Database Validations  *********** **/
     /** *********************************************** **/
 
@@ -142,15 +152,16 @@ public $db;
      * @return boolean
      * 
      */
-    public function is_email_exist_to($table , $value){
+    public function is_email_exist_to($table, $value)
+    {
 
         $this->db->prepare("SELECT * FROM {$table} WHERE email = :email LIMIT 1");
         $this->db->bindValue(':email', $value);
         $this->db->execute();
-         return $user =  $this->db->fetchAssociative();
+        return $user =  $this->db->fetchAssociative();
     }
 
-	/**
+    /**
      * check if a value of a column is unique.
      *
      * @param  string  $value
@@ -158,7 +169,8 @@ public $db;
      * @param string   $table
      * @return bool
      */
-    public function unique($value, $col,$table="students_data"){
+    public function unique($value, $col, $table = "students_data")
+    {
 
         $this->db = Database::open_db();
         $this->db->prepare("SELECT * FROM {$table} WHERE {$col} = :{$col}");
@@ -166,7 +178,6 @@ public $db;
         $this->db->execute();
 
         return $this->db->countRows() === 0;
-
     }
     /**
      * this method check if the email is verified or not
@@ -174,13 +185,22 @@ public $db;
      * @param $string
      * @return bool
      */
-    public function is_email_verified($table,$email){
-        $this->db->prepare("SELECT * FROM {$table} WHERE email = :email");
-        $this->db->bindValue(":email", $email);
-        $this->db->execute();
-        $user =  $this->db->fetchAssociative();
+    public function is_email_verified($email)
+    {
+        $table = array("students_data","admin","teachers_data");
 
-        return !empty($user['is_email_activated']);
+        $this->db = Database::open_db();
+        for($i=0;$i<count($table);$i++){
+            print_r($table[$i]);
+            $this->db->prepare("SELECT * FROM $table[$i] WHERE email = :email LIMIT 1");
+            $this->db->bindValue(":email", $email);
+            $this->db->execute();
+            $user =  $this->db->fetchAssociative();
+            if ($user['is_email_activated'] > 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -190,21 +210,21 @@ public $db;
      * @param  string  $string
      * @return bool
      */
-    public function emailUnique($email){
+    public function emailUnique($email)
+    {
 
         $this->db = Database::open_db();
 
         // email is unique in the database, So, we can't have more than 2 same emails
-		$this->db->prepare("SELECT * FROM students_data WHERE email = :email LIMIT 1");
-		$this->db->bindValue(':email', $email);
-		$this->db->execute();
+        $this->db->prepare("SELECT * FROM students_data WHERE email = :email LIMIT 1");
+        $this->db->bindValue(':email', $email);
+        $this->db->execute();
         $user =  $this->db->fetchAssociative();
 
-        if ( $this->db->countRows() === 1) {
+        if ($this->db->countRows() === 1) {
 
-            if(!empty($user["is_email_activated"])){
+            if (!empty($user["is_email_activated"])) {
                 return false;
-
             } else {
 
                 $expiry_time = (24 * 60 * 60);
@@ -212,13 +232,12 @@ public $db;
 
                 // If time elapsed exceeded the expiry time, it worth to reset the token, and the email as well.
                 // This indicates the email of $user hasn't been verified, and token is expired.
-                if($time_elapsed >= $expiry_time) {
+                if ($time_elapsed >= $expiry_time) {
 
                     //$login = new AuthModel();
-                     //$login->resetEmailVerificationToken($user["id"], false);
+                    //$login->resetEmailVerificationToken($user["id"], false);
                     return true;
-
-                }else {
+                } else {
 
                     // TODO check if $email is same as current user's email(not-activated),
                     // then ask the user to verify his email
@@ -228,7 +247,7 @@ public $db;
         }
         return true;
     }
-    
+
     /**
      * 
      * check if the email is equal to allowed domain
@@ -236,8 +255,9 @@ public $db;
      * @return bool
      * 
      */
-    public function checkEmailDomain($email,$domain = "tracecollege.edu.ph") {
-       return substr(strrchr($email, "@"), 1) === $domain ? true : false;
+    public function checkEmailDomain($email, $domain = "tracecollege.edu.ph")
+    {
+        return substr(strrchr($email, "@"), 1) === $domain ? true : false;
     }
 
 
@@ -253,8 +273,9 @@ public $db;
      * @return bool
      * @see Login::doLogin()
      */
-    public function credentials($user){
-        if(empty($user["hashed_password"]) || empty($user["user_id"])) {
+    public function credentials($user)
+    {
+        if (empty($user["hashed_password"]) || empty($user["user_id"])) {
             return false;
         }
         return password_verify($user["password"], $user["hashed_password"]);
@@ -266,9 +287,10 @@ public $db;
      * @param  array   $attempts
      * @return bool
      */
-    public function attempts($attempts){
+    public function attempts($attempts)
+    {
 
-        if(empty($attempts['last_time']) && empty($attempts['count'])) {
+        if (empty($attempts['last_time']) && empty($attempts['count'])) {
             return true;
         }
 
@@ -283,12 +305,11 @@ public $db;
 
             // here i can't define a default error message as in defaultMessages()
             // because the error message depends on variables like $block_time & $time_elapsed
-                Session::set('danger',"You exceeded number of possible attempts, please try again later after " .
-           
+            Session::set('danger', "You exceeded number of possible attempts, please try again later after " .
+
                 date("i", $block_time - $time_elapsed) . " minutes");
             return false;
-
-        }else{
+        } else {
 
             return true;
         }
@@ -306,7 +327,8 @@ public $db;
      *
      * @see
      */
-    private function fileUnique($path){
+    private function fileUnique($path)
+    {
         // return !file_exists($path);
     }
 
@@ -316,7 +338,8 @@ public $db;
      * @param  array   $file
      * @return bool
      */
-    private function fileErrors($file){
+    private function fileErrors($file)
+    {
         return (int)$file['error'] === UPLOAD_ERR_OK;
     }
 
@@ -328,7 +351,8 @@ public $db;
      *
      * @see
      */
-    private function fileUploaded($file){
+    private function fileUploaded($file)
+    {
         return is_uploaded_file($file["tmp_name"]);
     }
 
@@ -339,20 +363,21 @@ public $db;
      * @param  array   $args(min,max)
      * @return bool
      */
-    public function fileSize($file, $args){
+    public function fileSize($file, $args)
+    {
 
         // size in bytes,
         // 1 KB = 1024 bytes, and 1 MB = 1048,576 bytes.
-        $size = array ("min" => (int)$args[0], "max" => (int)$args[1]);
+        $size = array("min" => (int)$args[0], "max" => (int)$args[1]);
 
         if ($file['size'] > $size['max']) {
-            Session::set('danger',"File size can't exceed max limit (". ($size['max']/102400) . " MB)");
+            Session::set('danger', "File size can't exceed max limit (" . ($size['max'] / 102400) . " MB)");
             return false;
         }
 
         // better not to say the min limits.
-        if($file['size'] < $size['min']){
-            Session::set('danger',"File size either is too small or corrupted");
+        if ($file['size'] < $size['min']) {
+            Session::set('danger', "File size either is too small or corrupted");
             return false;
         }
         return true;
@@ -365,15 +390,16 @@ public $db;
      * @param  array   $dimensions(width,height)
      * @return bool
      */
-    public function imageSize($file, $dimensions){
+    public function imageSize($file, $dimensions)
+    {
 
         $imageSize  = array('width' => 0, 'height' => 0);
         list($imageSize['width'], $imageSize['height'])   = getimagesize($file["tmp_name"]);
 
-        if($imageSize["width"] < 10 || $imageSize["height"] < 10){
+        if ($imageSize["width"] < 10 || $imageSize["height"] < 10) {
             return false;
         }
-        if($imageSize["width"] > $dimensions[0] || $imageSize["height"] > $dimensions[1]){
+        if ($imageSize["width"] > $dimensions[0] || $imageSize["height"] > $dimensions[1]) {
             return false;
         }
         return true;
@@ -387,16 +413,13 @@ public $db;
      *   
      */
 
-     public function fileExtension($image, $allowed = array()){
+    public function fileExtension($image, $allowed = array())
+    {
         $image = $_FILES['image']['name'];
-          $extension = pathinfo($image, PATHINFO_EXTENSION);
-          if (!in_array($extension, $allowed)) {
+        $extension = pathinfo($image, PATHINFO_EXTENSION);
+        if (!in_array($extension, $allowed)) {
             return false;
-          }
+        }
         return true;
     }
-
-
-
-
 }

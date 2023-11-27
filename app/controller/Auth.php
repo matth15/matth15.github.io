@@ -49,56 +49,59 @@ class Auth extends Controller
                 die;
             }
 
-            // declare input variable
-            $lastname = $this->request->data('lastname');
-            $firstname = $this->request->data('firstname');
+            // Declare input variable
+            $lastName = $this->request->data('lastname');
+            $firstName = $this->request->data('firstname');
             $email = $this->request->data('email');
             $password =  $this->request->data('password');
             $confirmPassword =  $this->request->data('confirm_password');
             $gradeLevel = $this->request->data('grade_level');
             $strand = $this->request->data('strand');
 
-            // Instatiate ValidationRules class
+            // (Instatiate ValidationRules class)
             $rule = new ValidationRules();
 
+            // == Validate input fields ==
 
-            // validating input fields
-            if (!$rule->isRequired($firstname)) {
-                $data['signup-err'] = "First name is Required!";
-            } elseif (!$rule->minLen($firstname, 3)) {
-                $data['signup-err'] = 'First name sould be atleast 3 characters';
+            // Validate first name field
+            if (!$rule->isRequired($firstName)) {
+                $data['signup-err'] = "First name field is Required!";
+            } elseif (!$rule->minLen($firstName, 3)) {
+                $data['signup-err'] = "First name should be at least 3 Characters.";
             } else {
-                if (!$rule->isRequired($lastname)) {
-                    $data['signup-err'] = 'Last name is required';
-                } elseif (!$rule->minLen($lastname, 3)) {
-                    $data['signup-err'] = 'Last name should be atleast 3 characters';
+
+                // Validate last name field
+                if (!$rule->isRequired($lastName)) {
+                    $data['signup-err'] = "Last name field is Required!";
+                } else if (!$rule->minLen($lastName, 3)) {
+                    $data['signup-err'] = "Last name should be at least 3 Characters.";
                 } else {
+
                     // Validate email field
                     if (!$rule->isRequired($email)) {
-                        $data['signup-err'] = 'TRACE Email field is Required!';
-                    } elseif (!$rule->email($email)) {
-                        $data['signup-err'] = 'Enter a valid email address';
+                        $data['signup-err'] = "Email address is Required!";
                     } elseif (!$rule->checkEmailDomain($email, "tracecollege.edu.ph")) {
-                        $data['signup-err-domain'] = 'Only TRACE Email domain can access signup form.';
+                        $data['signup-err-domain'] = " Only TRACE Email domain can access sign up form.";
                     } else {
                         // Validate password field
                         if (!$rule->isRequired($password)) {
-                            $data['signup-err'] = 'Password cannot be empty.';
-                        } elseif (!$rule->minLen($password, 5)) {
-                            $data['signup-err'] = 'Password must not be less than 5 characters';
+                        } elseif (!$rule->minLen($password, 3)) {
+                            $data['signup-err'] = "Password must not be less than 5 Characters.";
                         } elseif (!$rule->password($password)) {
-                            $data['signup-err'] = 'Password must have at least a lowercase, uppercase, integer, and special character';
+                            $data['signup-err'] = "Password must have at least a lowercase, uppercase, integer, and special character";
                         } else {
-                            // Validate password confirmation
+
+                            // Validate confirm password field
                             if (empty($confirmPassword) || !$rule->equals($this->request->data("password"), [$this->request->data("confirm_password")])) {
                                 $data['signup-err'] = 'Password is not match!';
                             } else {
-                                //validate student gradelevel and strand
+
+                                // Validate grade level & strand 
                                 if (!$rule->isRequired($gradeLevel)) {
                                     $data['signup-err'] = 'Grade Level is Required!';
                                 } else {
                                     if (!$rule->isRequired($strand)) {
-                                        $data['signup-err'] = 'Strand is Required!';
+                                        $data['signup-err'] = "Strand is Required!";
                                     }
                                 }
                             }
@@ -106,18 +109,19 @@ class Auth extends Controller
                     }
                 }
             }
+
             if (!empty($data)) {
+                if (!empty($data['signup-err'])) {
+                    Session::set("SIGNUP-ERROR", $data['signup-err']);
+                }
                 if (!empty($data['signup-err-domain'])) {
-                    Session::set('SIGNUP-WARNING', $data['SIGNUP-WARNING']);
-                } else {
-                    Session::set('SIGNUP-ERROR', $data['SIGNUP-ERROR']);
+                    Session::set("SIGNUP-WARNING", $data['signup-err-domain']);
                 }
             }
 
+            // Login Process
             if (empty($data)) {
-
-                //modify
-                $result = $this->authmodel->register($firstname . ' ' . $lastname, $email, $password, $gradeLevel, $strand);
+                $result = $this->authmodel->register($firstName . ' ' . $lastName, $email, $password, $gradeLevel, $strand);
                 if ($result) {
                     Session::set('LOGIN-SUCCESS', 'Registration successful.');
                     $this->redirect->to('auth/login');
@@ -164,25 +168,33 @@ class Auth extends Controller
                     $data['login-err'] = 'Password cannot be empty.';
                 }
             }
+            //
             if (!empty($data)) {
                 Session::set('LOGIN-ERROR', $data['login-err']);
             }
             //
             if (empty($data)) {
+
                 // Check the password against the database
                 if ($this->authmodel->login($email, $password)) {
+                    //Set Session login process 
+                    Session::set('login-process', true);
+
                     // Password is correct, proceed to generate and send OTP
                     $otp = $this->authmodel->generateOTP();
                     $otp_expiration = date("Y-m-d H:i", strtotime(date('Y-m-d H:i') . " +1 mins"));
                     $result = $this->authmodel->updateGeneratedOTP($email, $otp, $otp_expiration);
 
                     if ($result) {
-                        $data = ['email' => $email, 'otp' => $otp];
-                        Email::sendEmail(Config::get('mailer/email_otp_confirmation'),  $email,  $otp, $data);
 
-                        // Redirect to OTP verification view
-                        Session::set('OTP-SUCCESS', "We've sent an OTP Code Verification from your TRACE E-mail -" . $email);
+                        $data = ['email' => $email, 'otp' => $otp];
+                        Email::sendEmail(Config::get('mailer/email_otp_confirmation'),  $email, $data);
+
+                        //Redirect to OTP verification view
+                        Session::set('OTP-SUCCESS', "We've sent an OTP Code from your TRACE Email");
                         $this->redirect->to('auth/verifyOTP');
+                    } else {
+                        Session::set('LOGIN-ERROR', "Failed to generateOTP and send to your E-mail");
                     }
                 }
             }
@@ -202,18 +214,24 @@ class Auth extends Controller
 
         $data = [];
 
+        //Identify if Session is in Login OR Forgot-Password Process
+        if (!Session::get('login-process')) {
+            if (!Session::get('forgot-password-process')) {
+                $this->redirect->to("account");
+                die();
+            }
+        }
+
         if ($this->request->isPost()) {
             if ($this->request->data('csrf_token') !== session::generateCsrfToken()) {
                 $this->redirect->to('auth');
-                die;
+                die();
             }
             // Extract input fields' values
             $email = $this->request->data("email");
             $otp = $this->request->data("otp_data");
 
 
-
-            $cancel = $this->request->data('otp_cancel');
 
             // Instantiate validation rules
             $rule = new ValidationRules();
@@ -226,15 +244,36 @@ class Auth extends Controller
             if (!empty($data['otp-err'])) {
                 Session::set('OTP-ERROR', $data['otp-err']);
             }
+
+
             if (empty($data)) {
-                // Verify OTP
+                // Verify User OTP
                 if ($this->authmodel->verifyOTP($email, $otp)) {
-                    if(Session::getAndDestroy('forgot-password-process')){
+                    // If user is in Session of Forgot-Password Process
+                    if (Session::get('forgot-password-process')) {
+
                         $this->redirect->to('account/reset_password');
+                    } else {
+                        // Check if User email is Verified
+                        if (!$rule->is_email_verified($email)) {
+
+                            //Set User email Verified
+                            $this->authmodel->setUserVerified($email);
+                            $userInfo = $this->authmodel->getProfileInfo($email);
+                            // Send notif of TRACE College Account Verified
+                            $data = ["email" => $email, "user_type" => $userInfo["user_type"]];
+                            Email::sendEmail(Config::get('mailer/email_account_verified'), $email, $data);
+                        } else {
+
+                            // Destroy login process Session :
+                            Session::getAndDestroy('login-process');
+
+                            Session::set('LOGIN-SUCCESS', 'Login Successfully!');
+                            // TO set logged in session :
+                            Session::setLoggedInSession();
+                            $this->redirect->to('auth');
+                        }
                     }
-                    Session::set('LOGIN-SUCCESS','Login Successfully!');
-                    // Session::setLoggedInSession(); // TO set logged in session 
-                    $this->redirect->to('auth');
                 }
             }
         }
@@ -256,6 +295,7 @@ class Auth extends Controller
         }
         // Get the user's email from the session or user input
         $email = $this->request->data("email");
+        $userName = $this->request->data('name');
 
         // Update the OTP and OTP expiration time in the database
         $otp = $this->authmodel->generateOTP();
@@ -265,8 +305,14 @@ class Auth extends Controller
 
         if ($result) {
             // Send the new OTP to the user's email
-            $data = ['email' => $email, 'otp' => $otp];
-            Email::sendEmail(Config::get('mailer/email_otp_confirmation'), $email, $otp, $data);
+            if (Session::get('forgot-password-process')) {
+                $data = ['email' => $email, 'otp' => $otp, 'name' => $userName];
+                Email::sendEmail(Config::get('mailer/email_account_forgot-password'), $email, $data);
+            } else {
+                $data = ['email' => $email, 'otp' => $otp];
+                Email::sendEmail(Config::get('mailer/email_otp_confirmation'), $email, $data);
+            }
+
             session::set('OTP-SUCCESS', 'New OTP have been sent to your email.');
             $this->redirect->to('auth/verifyOTP');
         }
@@ -284,6 +330,6 @@ class Auth extends Controller
     {
         // Log the user out and redirect to the login page
         $this->authmodel->logout(Session::getUserId());
-        return $this->redirect->to('auth/');
+        return $this->redirect->to('Home');
     }
 }

@@ -33,7 +33,7 @@ class Email
      * @param  array   $data any associated data with the email
      * @throws Exception If failed to send the email
      */
-    public static function sendEmail($type, $email, $userData, $data)
+    public static function sendEmail($type, $email, $data)
     {
         try {
 
@@ -52,7 +52,7 @@ class Email
 
 
             switch ($type) {
-                /**
+                    /**
                  * 
                  * 
                  * 
@@ -61,7 +61,7 @@ class Email
                     $mail->Body = Templates::getOtpLoginBody($data);
                     $mail->SetFrom(Config::get('mailer/email_from'), Config::get('mailer/email_from_name'));
                     $mail->AddReplyTo(Config::get('mailer/email_reply_to'));
-                    $mail->Subject = Config::get('mailer/email_subject');
+                    $mail->Subject = Config::get('mailer/email_subject_loginOTP');
                     $mail->AddAddress($email);
                     break;
                     /**
@@ -69,8 +69,20 @@ class Email
                      * 
                      * 
                      */
-                    case '';
-                    
+                case (Config::get('mailer/email_account_verified')):
+                    $mail->Body = Templates::getAccountVerifiedBody($data);
+                    $mail->SetFrom(Config::get('mailer/email_from'), Config::get('mailer/email_from_name'));
+                    $mail->AddReplyTo(Config::get('mailer/email_reply_to'));
+                    $mail->Subject = Config::get('mailer/email_subject_verified');
+                    $mail->AddAddress($email);
+                    break;
+                case (Config::get('mailer/email_account_forgot-password')):
+                    $mail->Body = Templates::getOtpForgotPasswordBody($data);
+                    $mail->SetFrom(Config::get('mailer/email_from'), Config::get('mailer/email_from_name'));
+                    $mail->AddReplyTo(Config::get('mailer/email_reply_to'));
+                    $mail->Subject = Config::get('mailer/email_subject_forgot-password');
+                    $mail->AddAddress($email);
+                    break;
             }
 
             $mail->Send();
