@@ -1,3 +1,4 @@
+</div>
 <script>
     var el = document.getElementById("wrapper");
     var toggleButton = document.getElementById("menu-toggle");
@@ -6,4 +7,10 @@
         el.classList.toggle("toggled");
     };
 </script>
-<?php require_once(__DIR__. "/../../partials/Footer.inc.php") ?>
+<!-- BOOTSTRAP -->
+<script src="<?= baseurl()?>/public/assets/js/bootstrap.bundle.min.js"></script>
+<!-- SCRIPT -->
+<script src="<?= baseurl() ?>/public/assets/script.js"></script>
+</body>
+
+</html>

@@ -263,7 +263,9 @@ class Auth extends Controller
                             // Send notif of TRACE College Account Verified
                             $data = ["email" => $email, "user_type" => $userInfo["user_type"]];
                             Email::sendEmail(Config::get('mailer/email_account_verified'), $email, $data);
-                        } else {
+                        }
+                        
+                        if(Session::get("login-process")) {
 
                             // Destroy login process Session :
                             Session::getAndDestroy('login-process');

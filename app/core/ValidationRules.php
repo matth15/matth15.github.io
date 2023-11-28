@@ -187,17 +187,21 @@ class ValidationRules
      */
     public function is_email_verified($email)
     {
-        $this->db = Database::open_db();
-        $table = ["students_data", "admin", "teachers_data"];
-
-        foreach ($table as $val) {
-            $this->db->prepare("SELECT * FROM {$val} WHERE email = :email LIMIT 1");
-            $this->db->bindValue(":email", $email);
-            if ($this->db->execute()) {
-                if ($this->db->fetchAssociative()['is_email_activated'] > 0) {
-                    return true;
+        $table = ["students_data", "teachers_data"];
+        try {
+            $this->db = Database::open_db();
+            foreach ($table as $val) {
+                $this->db->prepare("SELECT * FROM {$val} WHERE email = :email");
+                $this->db->bindValue(":email", $email);
+                if ($this->db->execute()) {
+                    $user = !empty($this->db->fetchAssociative()) ? $this->db->fetchAssociative() : NULL;
+                    if ($user && $user['is_email_verified'] > 0) {
+                        return true;
+                    }
                 }
             }
+        } catch (PDOException $e) {
+            $e->getMessage();
         }
         return false;
     }

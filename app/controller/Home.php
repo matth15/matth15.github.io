@@ -28,7 +28,7 @@ class Home extends Controller
         $this->view("/student/Dashboard");
         }
         elseif(Session::getUserType()=='admin'){
-         print_r("logged in by admin");
+         $this->view("/admin/Dashboard");
         }
         elseif(Session::getUserType()=='teacher'){
          print_r("logged in by teacher");
