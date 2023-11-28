@@ -26,7 +26,7 @@
         <div class="bg-white" id="sidebar-wrapper">
             <div class="sidebar-heading  text-center py-4 primary-text text-uppercase border-bottom">
                 <h3 class="fw-bold primary-text">Trace Early Alert</h3>
-                <span class="badge d-block bg-info text-dark mt-3 text-dark">Admin</span>
+                <span class="badge d-block bg-info text-dark mt-3 text-dark"><?= Session::getUserType()?></span>
             </div>
             <div class="list-group list-group-flush my-3">
                 <span class="list-category fw-bold">Main</span>
@@ -56,7 +56,7 @@
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle second-text fw-bold" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-user me-2"></i>msuarez.f2f@tracecollege.edu.ph
+                                <i class="fas fa-user me-2"></i><?= Session::getUserEmail()?>
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" href="#">Profile</a></li>

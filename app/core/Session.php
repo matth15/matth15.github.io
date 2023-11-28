@@ -66,7 +66,8 @@ class Session
      * @return string|null
      * 
      */
-    public static function getUserEmail(){
+    public static function getUserEmail()
+    {
         return empty($_SESSION["user_email"]) ? null : $_SESSION["user_email"];
     }
 
@@ -278,5 +279,22 @@ class Session
 
             unset($_SESSION[$msg]);
         }
+    }
+
+    public static function successToast($msg)
+    {
+        echo '<div class=" position-fixed bottom-0 end-0 p-3" style="z-index: 5;  max-width: 300px;">
+        <div id="myToast" class="toast hide bg-success text-white" role="alert" aria-live="assertive" aria-atomic="true">
+           <div class="d-flex ">
+           <div class="toast-body">
+            <strong>Success</strong>
+                ' . $_SESSION[$msg] . '
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto " data-bs-dismiss="toast" aria-label="Close"></button>
+           </div>
+        </div>
+    </div>';
+
+        unset($_SESSION[$msg]);
     }
 }

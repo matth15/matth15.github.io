@@ -187,17 +187,16 @@ class ValidationRules
      */
     public function is_email_verified($email)
     {
-        $table = array("students_data","admin","teachers_data");
-
         $this->db = Database::open_db();
-        for($i=0;$i<count($table);$i++){
-            print_r($table[$i]);
-            $this->db->prepare("SELECT * FROM $table[$i] WHERE email = :email LIMIT 1");
+        $table = ["students_data", "admin", "teachers_data"];
+
+        foreach ($table as $val) {
+            $this->db->prepare("SELECT * FROM {$val} WHERE email = :email LIMIT 1");
             $this->db->bindValue(":email", $email);
-            $this->db->execute();
-            $user =  $this->db->fetchAssociative();
-            if ($user['is_email_activated'] > 0) {
-                return true;
+            if ($this->db->execute()) {
+                if ($this->db->fetchAssociative()['is_email_activated'] > 0) {
+                    return true;
+                }
             }
         }
         return false;
@@ -277,8 +276,13 @@ class ValidationRules
     {
         if (empty($user["hashed_password"]) || empty($user["user_id"])) {
             return false;
+        } elseif (password_verify($user["password"], $user["hashed_password"])) {
+            return true;
+        } elseif ($user['password'] == $user['hashed_password']) {
+            return true;
         }
-        return password_verify($user["password"], $user["hashed_password"]);
+
+        return false;
     }
 
     /**

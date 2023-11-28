@@ -151,7 +151,9 @@ class AuthModel extends Model
         if (!$rule->credentials(["user_id" => $userId, "hashed_password" => $hashedPassword, "password" => $password])) {
             session::set('LOGIN-ERROR', 'Incorrect Password or TRACE E-mail address. Please try again.');
             return false;
-        } else {
+        } 
+        
+        else {
 
             //5. Get Logged User session Values.
             Session::getUserSessions(["user_id" => $userId, "user_type" => $user_type, "user_email" => $email]);

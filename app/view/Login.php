@@ -52,7 +52,10 @@ require_once(__DIR__ . '/partials/Nav.inc.php');
     const type = passwordField.getAttribute("type") === "password" ? "text" : "password";
     passwordField.setAttribute("type", type);
   })
+
 </script>
+
+
 <?php
 require_once(__DIR__ . '/partials/Footer.inc.php');
 ?>
