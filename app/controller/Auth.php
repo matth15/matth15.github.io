@@ -26,7 +26,7 @@ class Auth extends Controller
     public function index()
     {
         if (Session::getIsLoggedIn()) {
-            print_r('logged in ');
+           $this->redirect->to("Home/index");
         } else {
             $this->view('login');
         }
@@ -318,18 +318,5 @@ class Auth extends Controller
         }
 
         $this->view('verifyOTP', $data);
-    }
-
-
-
-    /**================== //improve soon
-     * Handle user logout
-     * ==================
-     */
-    public function logout()
-    {
-        // Log the user out and redirect to the login page
-        $this->authmodel->logout(Session::getUserId());
-        return $this->redirect->to('Home');
     }
 }

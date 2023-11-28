@@ -33,11 +33,6 @@ class App
     // Controller
     $parseURL = parse_url($URL[0]);
 
-    if(Session::getIsLoggedIn()){
-      $URL[0] = "Home";
-      $URL[1] = "index";
-    }
-
    if(isset($parseURL['query'])){
     parse_str($parseURL['query'] , $queryParams);
     if(isset($queryParams['id'])){
