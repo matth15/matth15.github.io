@@ -5,7 +5,7 @@ require_once(__DIR__ . '/partials/Header.inc.php');
 require_once(__DIR__ . '/partials/Nav.inc.php');
 ?>
 
-<section class="form-section">
+<section class="form-section" id="f-sect">
   <div class="wrapper">
     <div class="container shadow bg-light rounded-3 ">
       <div class="row">
@@ -34,7 +34,9 @@ require_once(__DIR__ . '/partials/Nav.inc.php');
             <div class="form-group d-grid col-12 py-3">
               <button type="submit" class="btn btn-primary" name="login_submit">Login</button>
             </div>
-            <a href="<?= baseurl() ?>/account/forgot_password">Forgot password?</a>
+           <div class="text-center pb-2">
+           <a href="<?= baseurl() ?>/account/forgot_password" class="f-btn ">Forgot password?</a>
+           </div>
           </div>
         </form>
       </div>

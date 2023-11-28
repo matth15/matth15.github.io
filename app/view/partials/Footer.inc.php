@@ -1,8 +1,9 @@
 <footer class="bg-dark text-light">
-  <p class="copyright-txt text-center py-1 mb-0">
+  <p class="copyright-txt text-center mb-0">
     <img src="/public/assets/images/c-circle.svg" alt="Copyright logo" /> Copyright | TRACE
-    Early Alert 2023
+    Early Alert 2023 | <span>Developed By Matthew Suarez</span>
   </p>
+  <p>sadf</p>
 </footer>
 <!-- BOOTSTRAP -->
 <script src="/public/assets/js/bootstrap.bundle.min.js"></script>

@@ -182,7 +182,7 @@ class Auth extends Controller
 
                     // Password is correct, proceed to generate and send OTP
                     $otp = $this->authmodel->generateOTP();
-                    $otp_expiration = date("Y-m-d H:i", strtotime(date('Y-m-d H:i') . " +1 mins"));
+                    $otp_expiration = date("Y-m-d H:i", strtotime(date('Y-m-d H:i') . " +5 mins"));
                     $result = $this->authmodel->updateGeneratedOTP($email, $otp, $otp_expiration);
 
                     if ($result) {
@@ -264,7 +264,7 @@ class Auth extends Controller
                             $data = ["email" => $email, "user_type" => $userInfo["user_type"]];
                             Email::sendEmail(Config::get('mailer/email_account_verified'), $email, $data);
                         }
-                        
+
                         if(Session::get("login-process")) {
 
                             // Destroy login process Session :
@@ -301,7 +301,7 @@ class Auth extends Controller
 
         // Update the OTP and OTP expiration time in the database
         $otp = $this->authmodel->generateOTP();
-        $otp_expiration = date("Y-m-d H:i", strtotime(date('Y-m-d H:i') . " +1 mins"));
+        $otp_expiration = date("Y-m-d H:i", strtotime(date('Y-m-d H:i') . " +5 mins"));
         //
         $result = $this->authmodel->updateGeneratedOTP($email, $otp, $otp_expiration);
 

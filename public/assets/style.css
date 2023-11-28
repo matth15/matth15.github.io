@@ -85,6 +85,7 @@ h1,h2,h3,h4,h5,h6,p{
     .p-txt{ font-size: 13.8px; }
     .img-about{ width: 1px; }
     .copyright-txt{ font-size: 13px; }
+    #f-sect{ background:var(--maroon) }
 }
 /** form control style **/
 .form-section{
@@ -186,6 +187,13 @@ h1,h2,h3,h4,h5,h6,p{
     right: 9%;
     cursor: pointer;
     color: lightslategray
+}
+.form-section .f-btn {
+    text-decoration: none;
+color: rgb(40, 111, 204)
+}
+.form-section .f-btn:hover {
+    text-decoration: underline ;
 }
 
 

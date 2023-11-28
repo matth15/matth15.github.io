@@ -3,9 +3,9 @@ $page_title = "Dashboard";
 
 require_once(__DIR__ . "/includes/main.header.php");
 ?>
-<div class="container">
-    <h2><strong>testing</strong></h2>
-</div>
+<section class="graph-dashboard">
+    
+</section>
 <?php if (isset($_SESSION['LOGIN-SUCCESS']) && $_SESSION['LOGIN-SUCCESS']) : Session::successToast("LOGIN-SUCCESS"); ?>
     <!-- SHOW TOAST -->
     <script>

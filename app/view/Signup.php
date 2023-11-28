@@ -6,7 +6,7 @@ require_once(__DIR__ . '/partials/Header.inc.php');
 require_once(__DIR__ . '/partials/Nav.inc.php');
 ?>
 
-<section class="form-section d-flex justify-content-center align-items-center">
+<section class="form-section d-flex justify-content-center align-items-center" id="f-sect">
     <div class="container bg-light shadow rounded-3 mx-3" style="width: 576px;">
         <form action="<?= baseurl() ?>/auth/signup" method="POST">
             <input type="hidden" name="csrf_token" value="<?= Session::generateCsrfToken(); ?>">
