@@ -138,6 +138,6 @@ class Account extends Controller
     {
         // Log the user out and redirect to the login page
         $this->authmodel->logout(Session::getUserId());
-        return $this->redirect->to('Home');
+        return $this->redirect->to('auth');
     }
 }

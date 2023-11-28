@@ -3,7 +3,7 @@ $page_title = "Forgot password";
 require __DIR__ . '/partials/Header.inc.php';
 include __DIR__ . '/partials/Nav.inc.php';
 ?>
-<section class="form-section ">
+<section class="form-section " id="f-sect">
     <div class="wrapper">
         <div class="container shadow bg-light rounded-3 ">
             <div class="row">

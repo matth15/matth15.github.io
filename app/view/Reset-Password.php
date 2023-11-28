@@ -5,7 +5,7 @@ require_once __DIR__ . '/partials/Header.inc.php';
 require_once __DIR__ . '/partials/Nav.inc.php';
 
 ?>
-<section class="form-section">
+<section class="form-section" id="f-sect">
   <?php 
    $userinfo = !empty(Session::getUserEmail()) ? Session::getUserEmail() : null;
   ?>
