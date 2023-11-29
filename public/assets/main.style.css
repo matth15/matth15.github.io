@@ -118,10 +118,12 @@
   }
   .content-wrapper table {
     width: 100%;
+    display: -webkit-flex;
+    overflow: auto;
   }
   th,td {
     border: 1px solid #dddddd;
-    padding: 8px;
+    padding: 20px ;
   }
   tr:nth-child(even) {
     background-color: azure;

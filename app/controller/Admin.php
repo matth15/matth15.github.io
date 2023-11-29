@@ -34,6 +34,11 @@ class Admin extends Controller
     {
         $data = [];
 
-        $this->view("admin/History", $data);
+        $this->view("admin/AlertHistory", $data);
+    }
+    public function send_alert(){
+        $data = []; 
+
+        $this->view("admin/SendAlert");
     }
 }

@@ -11,4 +11,9 @@ class Teacher extends Controller
         $this->redirect = new Redirect();
         $this->authmodel = $this->model('');
     }
+    public function dashboard(){
+        $data = [];
+
+        $this->view("teacher/Dashboard");
+    }
 }

@@ -1,4 +1,6 @@
-<?php require_once(__DIR__ . "/includes/main.header.php") ?>
+<?php 
+    $page_title = "Facultys";
+require_once(__DIR__ . "/includes/main.header.php") ?>
 <div class="content-wrapper">
     <div class="container-fluid">
         <div class="row">

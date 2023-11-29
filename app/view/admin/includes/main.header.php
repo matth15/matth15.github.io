@@ -61,7 +61,7 @@
                         </a>
                         
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="<?= baseurl()?>/account/profile">Profile</a></li>
+                            <li><a class="dropdown-item" href="<?= baseurl()?>/account/profile"><i class="fa-solid fa-address-card me-2"></i>Profile</a></li>
                             <li><a class="dropdown-item" href="<?= baseurl()?>/account/settings"><i class="fa-solid fa-gear me-2"></i>Settings</a></li>
                             <li><a class="dropdown-item" href="<?= baseurl()?>/account/logout"><i class="fas fa-power-off me-2"></i>Logout</a></li>
                         </ul>

@@ -59,7 +59,7 @@
                                 <i class="fas fa-user me-2"></i><?= Session::getUserEmail()?>
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="#">Profile</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="fa-solid fa-address-card me-2"></i>Profile</a></li>
                                 <li><a class="dropdown-item" href="#"><i class="fa-solid fa-gear me-2"></i>Settings</a></li>
                                 <li><a class="dropdown-item" href="#"><i class="fas fa-power-off me-2"></i>Logout</a></li>
                             </ul>

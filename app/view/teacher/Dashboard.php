@@ -1,9 +1,9 @@
 <?php
  $page_title = "Dashboard";
 
- require_once(baseurl()."app/view/partials/Header.inc.php");
+ require_once(__DIR__."/includes/main.header.php");
 ?>
 
 <?php 
-require_once(baseurl()."app/view/partials/Footer.inc.php");
+require_once(__DIR__."/includes/main.footer.php");
 ?>
