@@ -22,7 +22,7 @@ require_once(__DIR__ . "/includes/main.header.php");
                             <p class="d-flex align-items-center"><i class="fa fa-users fa-2x text-secondary me-2 "></i>Student</p>
                             <div class="col-12 d-flex justify-content-center">
 
-                                <h2>0</h2>
+                                <h2><?= $studentCount ?></h2>
                             </div>
                             <a href="<?= baseurl() ?>/admin/student_list" class="card-view text-center">View</p></a>
                         </div>
@@ -35,7 +35,7 @@ require_once(__DIR__ . "/includes/main.header.php");
                         <div class="row">
                             <p class="d-flex align-items-center"><i class="fa-solid fa-school fa-2x text-secondary me-2"></i> Faculty</p>
                             <div class="col-12 d-flex justify-content-center">
-                                <h2>0</h2>
+                                <h2><?= $teacherCount ?></h2>
                             </div>
                             <a href="<?= baseurl() ?>/admin/faculty_list" class="card-view text-center">View</p></a>
                         </div>

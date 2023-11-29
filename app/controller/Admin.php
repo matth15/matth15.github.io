@@ -9,13 +9,15 @@ class Admin extends Controller
     {
         $this->request = $request !== null ? $request : new Request();
         $this->redirect = new Redirect();
-        $this->authmodel = $this->model('');
+        $this->authmodel = $this->model('AdminModel');
     }
 
     public function dashboard()
     {
         $data = [];
-
+         $studentCount = $this->authmodel->getStudentCount();
+         $facultyCount = $this->authmodel->getFacultyCount();
+         $data = ['studentCount' => $studentCount, 'teacherCount' => $facultyCount];
         $this->view("admin/dashboard", $data);
     }
 
@@ -23,11 +25,18 @@ class Admin extends Controller
     {
         $data = [];
 
+        $total_records_per_pages = 10;
+
+        $studentData = $this->authmodel->fetchStudentData();
+        $studentCount = $this->authmodel->getStudentCount();
+        $data = ['sd' => $studentData, 'totalStudent' => $studentCount];
         $this->view("admin/StudentList", $data);
     }
     public function faculty_list()
     {
         $data = [];
+        $facultyData = $this->authmodel->fetchFacultyData();
+        $data = ['fd' => $facultyData];
         $this->view("admin/FacultyList", $data);
     }
     public function alert_history()

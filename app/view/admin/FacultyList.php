@@ -10,4 +10,5 @@ require_once(__DIR__ . "/includes/main.header.php") ?>
         </div>
     </div>
 </div>
+<?php require_once(__DIR__.'/../partials/Faculty_list.php') ?>
 <?php require_once(__DIR__ . "/includes/main.footer.php") ?>
