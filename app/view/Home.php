@@ -24,6 +24,7 @@ require_once __DIR__ . '/partials/Header.inc.php'; //HEADER
     </div>
   </div>
 </header> <!-- HEADER SITE -->
+
 <main>
   <section class="about bg-light" id="about">
     <div class="container">

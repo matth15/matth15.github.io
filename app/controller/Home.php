@@ -23,19 +23,10 @@ class Home extends Controller
 
    public function index()
    {
-      if(Session::getIsLoggedIn()) {
-        if(Session::getUserType()=='student'){
-        $this->view("/student/Dashboard");
-        }
-        elseif(Session::getUserType()=='admin'){
-         $this->view("/admin/Dashboard");
-        }
-        elseif(Session::getUserType()=='teacher'){
-         print_r("logged in by teacher");
-        }
-      }
-      else {
-        $this->view('home');
+      if (Session::getIsLoggedIn()) {
+         $this->redirect->to('dashboard');
+      } else {
+         $this->view('home');
       }
    }
 }
