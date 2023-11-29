@@ -113,5 +113,16 @@
     text-decoration: none;
   }
   .content-wrapper .card-view:hover {
+
     text-decoration: underline;
+  }
+  .content-wrapper table {
+    width: 100%;
+  }
+  th,td {
+    border: 1px solid #dddddd;
+    padding: 8px;
+  }
+  tr:nth-child(even) {
+    background-color: azure;
   }

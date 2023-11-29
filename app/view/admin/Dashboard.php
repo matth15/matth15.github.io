@@ -9,8 +9,6 @@ require_once(__DIR__ . "/includes/main.header.php");
             <div class="col col-12">
                 <h4 class="text-secondary">Dashboard</h4>
             </div>
-            <div class="col col-12">
-            </div>
         </div>
     </div>
 </div>
