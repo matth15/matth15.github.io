@@ -28,9 +28,11 @@ class AuthModel extends Model
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT, array('cost' => Config::get('hashing/hash_cost_factor')));
 
         $this->db->beginTransaction();
-        $query = "INSERT INTO students_data (name, email, password , grade_level ,strand,user_type) VALUES (:name, :email, :hashedPassword, :grade_level, :strand,:user_type)";
+        $query = "INSERT INTO students_data (unique_id,name, email, password , grade_level ,strand,user_type) VALUES (:unique_id,:name, :email, :hashedPassword, :grade_level, :strand,:user_type)";
 
+        $unique_id = $this->generateStudentUniqueId();
         $this->db->prepare($query);
+        $this->db->bindValue(':unique_id',$unique_id);
         $this->db->bindValue(':name', $fullname);
         $this->db->bindValue(':email', $email);
         $this->db->bindValue(':hashedPassword', $hashedPassword);
@@ -239,6 +241,18 @@ class AuthModel extends Model
     }
 
 
+    
+    public function generateStudentUniqueId(){
+        $generatedId = $this->generateOTP(7);
+        $this->db->prepare("SELECT COUNT(*) FROM students_data WHERE unique_id = :generatedId");
+        $this->db->bindValue(":generatedId",$generatedId);
+        $this->db->execute();
+
+        if($this->db->fetchColumn > 0){
+            $this->generateStudentUniqueId();
+        }
+        return $generatedId;
+    }
     /**
      * ====================================
      *          GENERATED OTP MODEL

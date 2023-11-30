@@ -48,4 +48,7 @@ class Templates
 ';
 return $body;
   }
+  public function getEarlyAlertBody($data ){
+
+  }
 }

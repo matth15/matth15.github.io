@@ -26,7 +26,7 @@
         <div class="bg-white" id="sidebar-wrapper">
             <div class="sidebar-heading  text-center py-4 primary-text text-uppercase border-bottom">
                 <h3 class="fw-bold primary-text">Trace Early Alert</h3>
-                <span class="badge d-block bg-info text-dark mt-3 text-dark"><?= Session::getUserType()?></span>
+              
             </div>
             <div class="list-group list-group-flush my-3">
                 <span class="list-category fw-bold">Main</span>
@@ -56,12 +56,12 @@
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle second-text fw-bold" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-user me-2"></i><?= Session::getUserEmail()?>
+                                <i class="fas fa-user me-2"></i><?= Session::getUserEmail()?>  <span class="badge bg-info text-dark"><?= Session::getUserType()?></span>
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="#"><i class="fa-solid fa-address-card me-2"></i>Profile</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="fa-solid fa-gear me-2"></i>Settings</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="fas fa-power-off me-2"></i>Logout</a></li>
+                                <li><a class="dropdown-item" href="<?=baseurl()?>"><i class="fa-solid fa-address-card me-2"></i>Profile</a></li>
+                                <li><a class="dropdown-item" href="<?=baseurl()?>"><i class="fa-solid fa-gear me-2"></i>Settings</a></li>
+                                <li><a class="dropdown-item" href="<?=baseurl()?>/account/logout"><i class="fas fa-power-off me-2"></i>Logout</a></li>
                             </ul>
                         </li>
                     </ul>

@@ -62,9 +62,14 @@ $GLOBALS['config'] = array(
     "email_otp_confirmation" => "1",
     "email_account_verified" => "2",
     "email_account_forgot-password" => "3",
+    "email_send_alert" => "4",
+
     "email_subject_loginOTP" => "Login OTP",
     "email_subject_verified" => "TRACE Early Alert Account Verified",
     "email_subject_forgot-password" => "TRACE Early Alert Request reset password.",
+    // "email_subject_earlyalert" => "",
+
+
 
   ),
 

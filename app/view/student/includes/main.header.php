@@ -30,7 +30,7 @@
         </div>
         <div class="list-group list-group-flush my-3">
             <span class="list-category fw-bold">Main</span>
-            <a href="student/inbox" class="list-group-item list-group-item-action bg-transparent second-text active">
+            <a href="<?=baseurl()?>/student/inbox" class="list-group-item list-group-item-action bg-transparent second-text active">
                 <i class="fa-solid fa-inbox me-2"></i>Inbox</a>
         </div>
     </div>
@@ -55,9 +55,9 @@
                             <i class="fas fa-user me-2"></i><?= Session::getUserEmail() ?>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="account/profile"><i class="fa-solid fa-address-card me-2"></i>Profile</a></li>
-                            <li><a class="dropdown-item" href="account/settings"><i class="fa-solid fa-gear me-2"></i>Settings</a></li>
-                            <li><a class="dropdown-item" href="account/logout"><i class="fas fa-power-off me-2"></i>Logout</a></li>
+                            <li><a class="dropdown-item" href="<?=baseurl()?>/account/profile"><i class="fa-solid fa-address-card me-2"></i>Profile</a></li>
+                            <li><a class="dropdown-item" href="<?=baseurl()?>/account/settings"><i class="fa-solid fa-gear me-2"></i>Settings</a></li>
+                            <li><a class="dropdown-item" href="<?=baseurl()?>/account/logout"><i class="fas fa-power-off me-2"></i>Logout</a></li>
                         </ul>
                     </li>
                 </ul>

@@ -18,7 +18,7 @@
                     <?php foreach ($fd as $val) {
                         echo '<tr >';
                         echo '<td>' . $val['id'] . '</td>';
-                        echo '<td>4564</td>';
+                        echo '<td>NULL</td>';
                         echo '<td>' . $val['name'] . '</td>';
                         echo ' <td>' . $val['email'] . '</td>';
                         echo '<td> </td>';
@@ -28,6 +28,7 @@
                         echo '</td>';
                         echo '</tr>';
                     } ?>
+                    
                 </table>
             </div>
         </div>

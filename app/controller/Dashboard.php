@@ -15,7 +15,7 @@ class Dashboard extends Controller
                 $this->redirect->to('admin/dashboard');
                 break;
             case 'student';
-                $this->redirect->to('student/dashboard');
+                $this->redirect->to('student/inbox');
                 break;
             case 'teacher';
                 $this->redirect->to('teacher/dashboard');
