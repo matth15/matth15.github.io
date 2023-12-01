@@ -26,8 +26,6 @@ class App
    */
   public function run()
   {
-
-   
     $URL = $this->splitURL();
     
     // Controller

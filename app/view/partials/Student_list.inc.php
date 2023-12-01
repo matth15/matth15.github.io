@@ -1,10 +1,11 @@
 <div class="content-wrapper">
     <div class="container-fluid table-container">
         <div class="row">
-            <div class="col col-12 py-2">
-                <a href="" class="btn btn-sm btn-success"><i class="fa-solid fa-plus me-2"></i>Add Student</a>
-                <hr>
+        <div class="col col-lg-6 col-12 py-3">
+                <a href="" class="btn btn-sm btn-success"><i class="fa-solid fa-plus me-2"></i>Add Faculty</a>
+              
             </div>
+            <hr>
             <div class="col col-table col-12">
                 <table>
                     <tr>

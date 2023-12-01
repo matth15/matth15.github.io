@@ -1,10 +1,21 @@
 <div class="content-wrapper">
     <div class="container-fluid table-container">
         <div class="row">
-            <div class="col col-12 py-2">
+            <div class="col col-lg-6 col-12 py-3">
                 <a href="" class="btn btn-sm btn-success"><i class="fa-solid fa-plus me-2"></i>Add Faculty</a>
-                <hr>
+              
             </div>
+            <!-- <div class="col col-lg-6 col-12 d-flex justify-content-end">
+                <nav class="navbar navbar-light">
+                    <div class="container-fluid">
+                        <form class="d-flex">
+                            <input class="form-control me-2 " type="search" placeholder="Search" aria-label="Search">
+                            <button class="btn btn-secondary" type="submit">Search</button>
+                        </form>
+                    </div>
+                </nav>
+            </div> -->
+            <hr>
             <div class="col col-table col-12 ">
                 <table>
                     <tr>
@@ -20,11 +31,11 @@
                         echo '<tr >';
 
                         echo '<td>' . $val['id'] . '</td>';
-                        echo '<td>NULL</td>';
+                        echo '<td>'.$val['unique_id'].'</td>';
                         echo '<td>' . $val['name'] . '</td>';
                         echo ' <td>' . $val['email'] . '</td>';
-                        echo '<td>'.$val['department'].' </td>';
-                        echo '<td> '.$val['created_at'].'</td>';
+                        echo '<td>' . $val['department'] . ' </td>';
+                        echo '<td> ' . $val['created_at'] . '</td>';
                         echo  '<td>';
                         echo '<a href="#" class="btn btn-sm btn-success me-2"><i class="fa-solid fa-pen-to-square"></i></a>';
                         echo '<a href="#" class="btn btn-sm btn-danger "><i class="fa-solid fa-trash"></i></a>';
