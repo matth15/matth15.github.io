@@ -38,6 +38,7 @@ class Admin extends Controller
         $data = [];
         $facultyData = $this->authmodel->fetchFacultyData();
         $data = ['fd' => $facultyData];
+        $test = "asdfasdfasd";
         $this->view("admin/FacultyList", $data);
     }
     public function alert_history()
