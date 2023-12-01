@@ -18,6 +18,7 @@ class Admin extends Controller
          $studentCount = $this->authmodel->getStudentCount();
          $facultyCount = $this->authmodel->getFacultyCount();
          $data = ['studentCount' => $studentCount, 'teacherCount' => $facultyCount];
+         
         $this->view("admin/dashboard", $data);
     }
 
