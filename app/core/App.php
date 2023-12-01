@@ -33,18 +33,9 @@ class App
     // Controller
     $parseURL = parse_url($URL[0]);
 
-   if(isset($parseURL['query'])){
-    parse_str($parseURL['query'] , $queryParams);
-    if(isset($queryParams['id'])){
-      $idValue = $queryParams['id']; 
-    }
-   }
-
     $URL[0] = $parseURL['path'];
     $filename = "app/controller/" . ucfirst($URL[0]) . ".php";
 
-   
-    
     //var_dump(print_r($filename));
 
     if (!empty($URL[0])) {
