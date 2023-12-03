@@ -24,7 +24,7 @@ require_once(__DIR__ . "/includes/main.header.php");
 
                                 <h2><?= $studentCount ?></h2>
                             </div>
-                            <a href="<?= baseurl() ?>/admin/student_list" class="card-view text-center">View</p></a>
+                            <a href="<?= baseurl() ?>/admin/student_list/" class="card-view text-center">View</p></a>
                         </div>
                     </div>
                 </div>

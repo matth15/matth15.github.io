@@ -38,10 +38,10 @@ h1,h2,h3,h4,h5,h6,p{
 }
 
 .nav-link,.dropdown-item{
-    font-size: 1.0rem;
+    font-size: 1rem;
 }
 .p-txt{
-    font-size: 0.9rem
+    font-size: 1rem
 }
 .nav-link,.dropdown-item{
     border-radius: .375rem;
@@ -83,6 +83,7 @@ h1,h2,h3,h4,h5,h6,p{
     .header-site h1 span{ font-size: 2.1rem; }
     .header-site h1{font-size: 1.2rem;}
     .header-site p {font-size: 0.9rem;}
+    .header-site{ background: rgb(117, 19, 17);}
     .p-txt{ font-size: 13.8px; }
     .img-about{ width: 1px; }
     .copyright-txt{ font-size: 13px; }

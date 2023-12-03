@@ -2,7 +2,7 @@
 
 if (Session::getIsLoggedIn()) {
     if (Session::getUserType() !== "admin") {
-        header('location:' . baseurl());
+        header('location : ' . baseurl());
         exit();
     }
 }
@@ -25,7 +25,10 @@ class Admin extends Controller
         $this->studentmodel = $this->model('studentModel');
         $this->teachermodel = $this->model('teacherModel');
     }
-
+    public function index()
+    {
+        $this->redirect->to('admin/dashboard');
+    }
     public function dashboard()
     {
         $data = [];
@@ -40,41 +43,8 @@ class Admin extends Controller
     {
         $data = [];
 
-        if ($this->request->isPost()) {
-            if ($this->request->data('addStudentSubmit')) {
-                //csrf protection
-                if ($this->request->data('csrf_token') !== session::generateCsrfToken()) {
-                    $this->redirect->to('auth');
-                    die;
-                }
 
-
-
-                $firstName = $this->request->data('firstname');
-                $lastName =  $this->request->data('lastlame');
-                $email =  filter_input($this->request->data('email'),FILTER_SANITIZE_EMAIL);
-                $password =  $this->request->data('password');
-                $confirm_password = $this->request->data('confirm_password');
-                $grade_level =  $this->request->data('grade_level');
-                $strand =  $this->request->data('strand');
-                $section = $this->request->data('section');
-                $class = $this->request->data('class');
-
-                $rule = new ValidationRules();
-
-                //validate student data
-                if(!$rule->isRequired($firstName)){
-                    $data['ValidationError'] = "First name is Required.";
-                }
-                elseif(!$rule->isRequired($lastName)){
-                    $data['ValidationError'] = "Last name is Required.";
-                }
-
-
-                $this->authmodel->register($firstName . ' ' . $lastName, $email, $password, $grade_level, $strand);
-            }
-            if (isset($_POST['deleteStudentSubmit'])) {
-            }
+        if (isset($_POST['deleteStudentSubmit'])) {
         }
 
         $studentCount = $this->studentmodel->getStudentCount();
@@ -103,13 +73,97 @@ class Admin extends Controller
             'next_page' => $page_no + 1
         ];
 
+
+
+
         $this->view("admin/StudentList", $data);
     }
-    public function faculty_list()
+
+    public function faculty_list($param1 = '', $param2 = '')
     {
         $data = [];
         $facultyData = $this->teachermodel->fetchFacultyData();
         $data = ['fd' => $facultyData];
         $this->view("admin/FacultyList", $data);
+    }
+
+
+    public function add_student()
+    {
+
+        if ($this->request->isPost()) {
+            
+            //csrf protection
+            if ($this->request->data("data")['action']) {
+                if ($this->request->data('data')['csrf_token'] !== session::generateCsrfToken()) {
+                    $this->redirect->to('home');
+                    die;
+                }
+               
+                $firstName = $this->request->data('firstname');
+                $lastName =  $this->request->data('lastname');
+                $email =  filter_input($this->request->data('email'), FILTER_SANITIZE_EMAIL);
+                $password =  $this->request->data('password');
+                $confirm_password = $this->request->data('confirm_password');
+                $grade_level =  $this->request->data('grade_level');
+                $strand =  $this->request->data('strand');
+
+                $rule = new ValidationRules();
+
+                $domainAllowed = "tracecollege.edu.ph";
+
+                //validate student data
+                if (!$rule->isRequired($firstName)) {
+                    $data['ValidationError'] = "First name is Required.";
+                } elseif (!$rule->isRequired($lastName)) {
+                    $data['ValidationError'] = "Last name is Required.";
+                } elseif (!$rule->isRequired($email)) {
+                    $data['ValidationError'] = "Email is Required.";
+                } elseif (!$rule->isRequired($password)) {
+                    $data['ValidationError'] = "Password is Required.";
+                } elseif (!$rule->isRequired($confirm_password)) {
+                    $data['ValidationError'] = "Confirm password is Required.";
+                } elseif (!$rule->isRequired($grade_level)) {
+                    $data['ValidationError'] = "Grade level is Required.";
+                } elseif (!$rule->isRequired($strand)) {
+                    $data['ValidationError'] = "Strand is Required.";
+                } else {
+                    //validate firstname and lastname 
+                    if (!$rule->minLen($firstName, 3)) {
+                        $data['ValidationError'] = "Strand is Required.";
+                    } elseif (!$rule->minLen($lastName, 3)) {
+                        $data['ValidationError'] = "Strand is Required.";
+                    } else {
+                        //validate email
+                        if (!$rule->checkEmailDomain($email, $domainAllowed)) {
+                            $data['ValidationError'] = "Strand is Required.";
+                        } elseif (!$rule->emailUnique($email)) {
+                            $data['ValidationError'] = "Strand is Required.";
+                        } else {
+                            //validate password & confirm password
+                            if (!$rule->minLen($password, 5)) {
+                                $data['ValidationError'] = "Strand is Required.";
+                            } elseif (!$rule->password($password)) {
+                                $data['ValidationError'] = "Strand is Required.";
+                            } elseif (empty($confirm_password) || !$rule->equals($password, [$confirm_password])) {
+                                $data['ValidationError'] = "Strand is Required.";
+                            }
+                        }
+                    }
+                }
+
+                header('Content-Type: application/json');
+
+               echo json_encode(['ValidationError' => true , "ValidationMessage" => "tite"]);
+            }
+        }
+    }
+
+    public function edit_student(){
+
+    }
+
+    public function delete_student(){
+
     }
 }

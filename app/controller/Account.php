@@ -20,9 +20,18 @@ class Account extends Controller
      */
     public function index()
     {
-        Session::set('LOGIN-WARNING', "Login to Continue!");
-        $this->redirect->to('auth');
+
     }
+    /**
+     * 
+     * 
+     * 
+     * 
+     */
+
+     public function profile($param1=''){
+        
+     }
     /**
      * 
      * 

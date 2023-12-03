@@ -95,6 +95,10 @@ class ValidationRules
         return preg_match('/\A[a-z0-9 ]+\z/i', $value);
     }
 
+    public function validateForm(){
+        
+    }
+
     /**
      * check if password has at least
      * - one lowercase letter

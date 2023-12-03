@@ -8,9 +8,9 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="<?= baseurl() ?>">Home</a>
+      <ul class="navbar-nav  me-auto mb-2 mb-lg-0 ms-auto">
+        <li class="nav-item ">
+          <a class="nav-link " href="<?= baseurl() ?>"><?= ($_SERVER['REQUEST_URI'] !== "/") ? '<i class=" fa-solid fa-house fa-lg me-2" style="color: #363636;"></i>' : '' ?>Home</a>
         </li>
        <?php if($_SERVER['REQUEST_URI'] === "/") : ?>
         <li class="nav-item dropdown">

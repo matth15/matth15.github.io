@@ -24,7 +24,6 @@
                         <th>Name</th>
                         <th>Trace Email</th>
                         <th>Department</th>
-                        <th><i class="fa-solid fa-calendar-days me-2"></i>Created At</th>
                         <th>Action</th>
                     </tr>
                     <?php foreach ($fd as $val) {
@@ -35,7 +34,6 @@
                         echo '<td>' . $val['name'] . '</td>';
                         echo ' <td>' . $val['email'] . '</td>';
                         echo '<td>' . $val['department'] . ' </td>';
-                        echo '<td> ' . $val['created_at'] . '</td>';
                         echo  '<td>';
                         echo '<a href="#" class="btn btn-sm btn-success me-2"><i class="fa-solid fa-pen-to-square"></i></a>';
                         echo '<a href="#" class="btn btn-sm btn-danger "><i class="fa-solid fa-trash"></i></a>';

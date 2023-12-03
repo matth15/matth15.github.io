@@ -88,7 +88,7 @@ class Auth extends Controller
                      else {
                         // Validate password field
                         if (!$rule->isRequired($password)) {
-                        } elseif (!$rule->minLen($password, 3)) {
+                        } elseif (!$rule->minLen($password, 5)) {
                             $data['signup-err'] = "Password must not be less than 5 Characters.";
                         } elseif (!$rule->password($password)) {
                             $data['signup-err'] = "Password must have at least a lowercase, uppercase, integer, and special character";
