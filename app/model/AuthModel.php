@@ -21,7 +21,7 @@ class AuthModel extends Model
         $rule = new ValidationRules();
 
         if (!$rule->unique($email, "email")) {
-            Session::set("SIGNUP-ERROR", $email . " Email account Already exist!");
+            Session::set("SIGNUP-ERROR", $email . " Email account already exist!");
             return false;
         }
 
@@ -31,6 +31,7 @@ class AuthModel extends Model
         $query = "INSERT INTO students_data (unique_id,name, email, password , grade_level ,strand,user_type) VALUES (:unique_id,:name, :email, :hashedPassword, :grade_level, :strand,:user_type)";
 
         $unique_id = $this->generateStudentUniqueId();
+
         $this->db->prepare($query);
         $this->db->bindValue(':unique_id',$unique_id);
         $this->db->bindValue(':name', $fullname);
@@ -243,15 +244,22 @@ class AuthModel extends Model
 
     
     public function generateStudentUniqueId(){
+       try{
         $generatedId = $this->generateOTP(7);
-        $this->db->prepare("SELECT COUNT(*) FROM students_data WHERE unique_id = :generatedId");
+        $this->db->prepare("SELECT * FROM students_data WHERE unique_id = :generatedId");
         $this->db->bindValue(":generatedId",$generatedId);
         $this->db->execute();
-
-        if($this->db->fetchColumn > 0){
+        $row = $this->db->fetchAssociative();
+        if($row){
             $this->generateStudentUniqueId();
         }
         return $generatedId;
+       }
+       catch(PDOException $e){
+       error_log( $e->getMessage());
+        return false;
+       }
+       return false;
     }
     /**
      * ====================================

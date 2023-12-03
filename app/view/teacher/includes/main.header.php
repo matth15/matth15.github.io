@@ -30,9 +30,9 @@
             </div>
             <div class="list-group list-group-flush my-3">
                 <span class="list-category fw-bold">Main</span>
-                <a href="#" class="list-group-item list-group-item-action bg-transparent second-text active">
+                <a href="<?= baseurl() ?>/teacher/dashboard" class="list-group-item list-group-item-action bg-transparent second-text active">
                     <i class="fas fa-tachometer-alt me-2"></i>Dashboard</a>
-                <a href="#" class="list-group-item list-group-item-action bg-transparent second-text fw-bold"><i class="fa-solid fa-user me-2"></i></i>Students</a>
+                <a href="<?= baseurl() ?>/teacher/student_list" class="list-group-item list-group-item-action bg-transparent second-text fw-bold"><i class="fa-solid fa-user me-2"></i></i>Students</a>
                 <span class="list-category fw-bold">Early Alert</span>
                 <a href="#" class="list-group-item list-group-item-action bg-transparent second-text fw-bold"><i class="fas fa-gift me-2"></i>Send Early Alert</a>
                 <a href="#" class="list-group-item list-group-item-action bg-transparent second-text fw-bold"><i class="fa-solid fa-clock-rotate-left me-2"></i>History</a>

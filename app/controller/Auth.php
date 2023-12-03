@@ -82,7 +82,10 @@ class Auth extends Controller
                         $data['signup-err'] = "Email address is Required!";
                     } elseif (!$rule->checkEmailDomain($email, "tracecollege.edu.ph")) {
                         $data['signup-err-domain'] = " Only TRACE Email domain can access sign up form.";
-                    } else {
+                    } elseif (!$rule->emailUnique($email)){
+
+                    }
+                     else {
                         // Validate password field
                         if (!$rule->isRequired($password)) {
                         } elseif (!$rule->minLen($password, 3)) {
@@ -138,11 +141,11 @@ class Auth extends Controller
      *              LOGIN CONTROLLER METHOD
      * ======================================================
      */
-    public function login()
+    public function login($params1 ='')
     {
 
         $data = [];
-
+    
         if ($this->request->isPost()) {
 
             if ($this->request->data('csrf_token') !== session::generateCsrfToken()) {

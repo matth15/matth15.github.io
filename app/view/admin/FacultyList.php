@@ -1,7 +1,7 @@
 <?php 
-    $page_title = "Facultys";
+    $page_title = "Faculty";
 require_once(__DIR__ . "/includes/main.header.php") ?>
-<div class="content-wrapper">
+<div class="content-wrapper" id="page_heading_title">
     <div class="container-fluid">
         <div class="row">
             <div class="col col-12">

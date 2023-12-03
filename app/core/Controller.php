@@ -23,7 +23,6 @@ class Controller
         }
     }
 
-
     /**
      *  Load Model
      *  @param string $model

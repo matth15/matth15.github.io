@@ -6,7 +6,7 @@
                 <div class="container-inbox">
                     <div class="row">
                         <div class="col">
-
+                            
                         </div>
                     </div>
                 </div>

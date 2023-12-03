@@ -3,11 +3,11 @@ $page_title = "Dashboard";
 
 require_once(__DIR__ . "/includes/main.header.php");
 ?>
-<div class="content-wrapper">
+<div class="content-wrapper" id="page_heading_title">
     <div class="container-fluid">
         <div class="row">
             <div class="col col-12">
-                <h4 class="text-secondary">Dashboard</h4>
+                <h4 class="">Dashboard</h4>
             </div>
         </div>
     </div>

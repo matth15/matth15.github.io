@@ -152,6 +152,19 @@ require_once __DIR__ . '/partials/Header.inc.php'; //HEADER
    
   </section> <!-- CONTACT -->
 </main>
+<script>
+  function navigateToSection(sectionId) {
+    // Access the section with the specified id
+    var section = document.getElementById(sectionId);
+
+    // Scroll to the section
+    if (section) {
+        section.scrollIntoView({
+            behavior: 'smooth' // Optional: Add smooth scrolling effect
+        });
+    }
+}
+</script>
 <?php
 require_once(__DIR__ . '/partials/Footer.inc.php');
 ?>

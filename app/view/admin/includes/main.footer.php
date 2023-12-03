@@ -1,4 +1,5 @@
 </div>
+
 <script>
     var el = document.getElementById("wrapper");
     var toggleButton = document.getElementById("menu-toggle");
@@ -7,6 +8,7 @@
         el.classList.toggle("toggled");
     };
 </script>
+
 <!-- BOOTSTRAP -->
 <script src="<?= baseurl()?>/public/assets/js/bootstrap.bundle.min.js"></script>
 <!-- SCRIPT -->

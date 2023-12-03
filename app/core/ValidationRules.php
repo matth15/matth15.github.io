@@ -225,28 +225,7 @@ class ValidationRules
         $user =  $this->db->fetchAssociative();
 
         if ($this->db->countRows() === 1) {
-
-            if (!empty($user["is_email_activated"])) {
-                return false;
-            } else {
-
-                $expiry_time = (24 * 60 * 60);
-                $time_elapsed = time() - $user['email_last_verification'];
-
-                // If time elapsed exceeded the expiry time, it worth to reset the token, and the email as well.
-                // This indicates the email of $user hasn't been verified, and token is expired.
-                if ($time_elapsed >= $expiry_time) {
-
-                    //$login = new AuthModel();
-                    //$login->resetEmailVerificationToken($user["id"], false);
-                    return true;
-                } else {
-
-                    // TODO check if $email is same as current user's email(not-activated),
-                    // then ask the user to verify his email
-                    return false;
-                }
-            }
+            return false;
         }
         return true;
     }

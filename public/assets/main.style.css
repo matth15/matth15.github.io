@@ -98,8 +98,18 @@
 
 
   /** **/
+
+  .page-content-wrapper{
+    
+  }
   .content-wrapper{
-    padding: 35px 30px;
+    padding: 1px 30px;
+    
+  }
+  #page_heading_title{
+    padding-top: 21px;
+    color: var(--second-text-color);
+    padding-bottom: 20px;
   }
   .content-wrapper .card {
     border-right: none;
@@ -121,12 +131,13 @@
     width: 100%;
     border-collapse: collapse;
     white-space: nowrap;
+    overflow: scroll;
     
   }
   .col-table {
     overflow-x: auto;
     width: 100%;
-    height: 92vh;
+    height: 100vh;
   }
   .content-wrapper .table-container {
     display: flex;

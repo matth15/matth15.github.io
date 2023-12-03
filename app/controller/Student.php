@@ -15,7 +15,7 @@ class Student extends Controller {
     public function inbox(){
         $data = [];
         
-        $this->view("/student/inbox",$data);
+        $this->view("student/inbox",$data);
     }
 }
 ?>

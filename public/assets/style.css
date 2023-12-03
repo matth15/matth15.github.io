@@ -46,6 +46,7 @@ h1,h2,h3,h4,h5,h6,p{
 .nav-link,.dropdown-item{
     border-radius: .375rem;
     transition: padding-left 0.2s ease;
+    cursor: pointer;
 }
 .nav-link:hover{
     color: #fff;
