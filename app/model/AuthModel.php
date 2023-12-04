@@ -19,14 +19,13 @@ class AuthModel extends Model
     {
 
         $rule = new ValidationRules();
-
-        if (!$rule->unique($email, "email")) {
-            Session::set("SIGNUP-ERROR", $email . " Email account already exist!");
-            return false;
-        }
-
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT, array('cost' => Config::get('hashing/hash_cost_factor')));
+        // if (!$rule->unique($email, "email")) {
+        //     Session::set("SIGNUP-ERROR", $email . " Email account already exist!");
+        //     return false;
+        // }
 
+      try{
         $this->db->beginTransaction();
         $query = "INSERT INTO students_data (unique_id,name, email, password , grade_level ,strand,user_type) VALUES (:unique_id,:name, :email, :hashedPassword, :grade_level, :strand,:user_type)";
 
@@ -42,7 +41,10 @@ class AuthModel extends Model
         $this->db->bindValue(':user_type', 'student');
         $this->db->execute();
         $this->db->commit();
-
+      }
+      catch(PDOException $e){
+        return false;
+      }
         return true;
     }
 

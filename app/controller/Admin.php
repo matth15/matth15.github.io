@@ -87,37 +87,44 @@ class Admin extends Controller
         $this->view("admin/FacultyList", $data);
     }
 
-
+    //add student data
     public function add_student()
     {
 
+        $data = [];
+        $response = [];
+
         if ($this->request->isPost()) {
-            
-            //csrf protection
-            if ($this->request->data("data")['action']) {
-                if ($this->request->data('data')['csrf_token'] !== session::generateCsrfToken()) {
+
+            $mydata = $this->request->data('data');
+            $action = $mydata['action'];
+
+            // $firstName = $mydata['firstname'];
+            $firstName = filter_var($mydata['firstname'], FILTER_SANITIZE_STRING);
+            $lastName = filter_var($mydata['lastname'], FILTER_SANITIZE_STRING);
+            $sanitizeEmail = filter_var($mydata['email'], FILTER_SANITIZE_EMAIL);
+            $password = filter_var($mydata['password'], FILTER_SANITIZE_STRING);
+            $confirm_password = filter_var($mydata['confirm_password'], FILTER_SANITIZE_STRING);
+            $grade_level = filter_var($mydata['grade_level'], FILTER_SANITIZE_STRING);
+            $strand = filter_var($mydata['strand'], FILTER_SANITIZE_STRING);;
+
+            if ($action == "insert") {
+                if ($this->request->data('csrf_token') == session::generateCsrfToken()) {
                     $this->redirect->to('home');
                     die;
                 }
-               
-                $firstName = $this->request->data('firstname');
-                $lastName =  $this->request->data('lastname');
-                $email =  filter_input($this->request->data('email'), FILTER_SANITIZE_EMAIL);
-                $password =  $this->request->data('password');
-                $confirm_password = $this->request->data('confirm_password');
-                $grade_level =  $this->request->data('grade_level');
-                $strand =  $this->request->data('strand');
 
                 $rule = new ValidationRules();
 
                 $domainAllowed = "tracecollege.edu.ph";
 
-                //validate student data
+                // validate student data
+
                 if (!$rule->isRequired($firstName)) {
                     $data['ValidationError'] = "First name is Required.";
                 } elseif (!$rule->isRequired($lastName)) {
                     $data['ValidationError'] = "Last name is Required.";
-                } elseif (!$rule->isRequired($email)) {
+                } elseif (!$rule->isRequired($sanitizeEmail)) {
                     $data['ValidationError'] = "Email is Required.";
                 } elseif (!$rule->isRequired($password)) {
                     $data['ValidationError'] = "Password is Required.";
@@ -130,40 +137,78 @@ class Admin extends Controller
                 } else {
                     //validate firstname and lastname 
                     if (!$rule->minLen($firstName, 3)) {
-                        $data['ValidationError'] = "Strand is Required.";
+                        $data['ValidationError'] = "First name should be at least 3 Characters.";
                     } elseif (!$rule->minLen($lastName, 3)) {
-                        $data['ValidationError'] = "Strand is Required.";
+                        $data['ValidationError'] = "Last name should be at least 3 Characters.";
                     } else {
                         //validate email
-                        if (!$rule->checkEmailDomain($email, $domainAllowed)) {
-                            $data['ValidationError'] = "Strand is Required.";
-                        } elseif (!$rule->emailUnique($email)) {
-                            $data['ValidationError'] = "Strand is Required.";
+                        if (!$rule->checkEmailDomain($sanitizeEmail, $domainAllowed)) {
+                            $data['ValidationError'] = "Trace email address only.";
+                        } elseif (!$rule->unique($sanitizeEmail, "email")) {
+                            $data['ValidationError'] = "Trace email address is already exist!";
                         } else {
                             //validate password & confirm password
-                            if (!$rule->minLen($password, 5)) {
-                                $data['ValidationError'] = "Strand is Required.";
+                            if (!$rule->minLen($password, 6)) {
+                                $data['ValidationError'] = "Password must not be less than 5 Characters.";
                             } elseif (!$rule->password($password)) {
-                                $data['ValidationError'] = "Strand is Required.";
+                                $data['ValidationError'] = "Password must have at least a lowercase, uppercase, integer, and special character.";
                             } elseif (empty($confirm_password) || !$rule->equals($password, [$confirm_password])) {
-                                $data['ValidationError'] = "Strand is Required.";
+                                $data['ValidationError'] = "Password is not match!";
                             }
                         }
                     }
                 }
+                if (!empty($data)) {
+                    $ValidationMessage =  $data['ValidationError'];
+                    $response = ['ValidationError' => true, 'ValidationMessage' => $ValidationMessage];
+                } else {
+                    if (empty($data)) {
+                        $result = $this->authmodel->register($firstName . ' ' . $lastName, $sanitizeEmail, $password, $grade_level, $strand);
+                        if ($result) {
+                            $response = ['Success' => true, "SuccessMessage" => "Registered student successfully!"];
+                        } else {
+                            $response = ['TechnicalError' => true, "TechnicalMessage" => "Failed to register student data. Error occured."];
+                        }
+                    }
+                }
 
-                header('Content-Type: application/json');
-
-               echo json_encode(['ValidationError' => true , "ValidationMessage" => "tite"]);
+                header("Content-Type: application/json");
+                echo json_encode($response);
             }
         }
     }
 
-    public function edit_student(){
+    public function edit_student($param1 = '', $param2 = '')
+    {
 
+        $data = [];
+        $response = [];
+        if (!empty($param1)) {
+            $studentId = filter_var($param1, FILTER_SANITIZE_NUMBER_INT);
+
+            $studentData = $this->studentmodel->fetchStudentProfile($studentId);
+            if($studentData){
+                $response = ["FetchConditionSuccess" => true , "FetchData" => $studentData]; 
+            }
+            else {
+                $response = ["FetchConditionFailed" => true , "FetchConditionMessage" => "Student ID not found." ];
+            }
+            header("Content-Type: application/json");
+            echo json_encode($response);
+        }
     }
 
-    public function delete_student(){
-
+    public function update_student(){
+        $data =[];
+        $response = [];
+        if($this->request->isPost()){
+            if($this->request->data('update_student')){
+                
+                echo json_encode(true);
+            }
+        }
+    }
+    public function delete_student()
+    {
     }
 }

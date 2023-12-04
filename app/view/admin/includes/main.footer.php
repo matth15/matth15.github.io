@@ -4,13 +4,12 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="<?= baseurl() ?>/public/assets/js/bootstrap.bundle.min.js"></script>
-<script src="<?= baseurl() ?>/public/assets/main.script.js"></script>
+<!-- <script src="<?= baseurl() ?>/public/assets/js/main.script.js"></script> -->
 
 <script type="text/javascript">
     $(document).ready(function() {
 
         $('#addStudentSubmit').click(function() {
-
             var data = {
                 csrf_token: $('#csrf_token').val(),
                 'action': 'insert',
@@ -22,28 +21,33 @@
                 strand: $('#strand').val(),
                 grade_level: $('#grade_level').val()
             };
+
+            console.log(data);
             $.ajax({
                 type: 'POST',
                 url: '<?= baseurl() ?>/admin/add_student',
-                DataType: 'json',
-                data: {
-                    data
-                },
+                data: 
+                   { data },
                 success: function(response) {
-                    if (response.success) {
-                        showAlert('success', response.SuccessMessage, '#studentTableAlert');
-
+                    showAlert();
+                    if (response.Success) {
+                        $('#student_form')[0].reset();
+                        $('#addStudentModal').modal('hide');
+                        $('#studentTable').load(location.href + " #studentTable ")
+                        showToast('success','Inset student data', response.SuccessMessage , '#toastContainer');
 
                     } else if (response.ValidationError) {
-                        // showAlert('danger', response.ValidationMessage, '#addStudentModalAlert');
-                        $('#addStudentModal').modal('hide');
-                        showToast('success', 'Insert Student Data', "Add student data successfully!", "#toastContainer");
-                    } else if (response.TechnicalError) {
-                        showAlert('alert', 'Insert failed. There was an error inside a system.');
+                        showAlert('danger', response.ValidationMessage, '#addStudentModalAlert');
+                    } 
+                    else if(response.TechnicalError){
+                        showAlert('warning',response.TechnicalMessage,'#addStudentModalAlert');
+                    }
+                    else {
+                        showAlert('warning', 'Insert failed. There is no response in ajax. ','#addStudentModalAlert');
                     }
                 },
-                error: function(error) {
-                    showAlert('alert', 'Submit failed. There was an error inside a system.', '$addStudentModalAlert');
+                error: function() {
+                    alert();
                 }
             });
         });
@@ -52,68 +56,99 @@
 
 
     });
-    var alertTimeout;
+    //edit student data 
+    $(document).on('click','.edit_StudentData', function(){
+        var studentId = $(this).val();
+        var url = '<?= baseurl() ?>/admin/edit_student/'+studentId; 
+
+        $.ajax({
+            type: "GET",
+            url: url,
+            success: function(result){
+
+                if(result.FetchConditionSuccess){
+                    $('#student_id').val(result.FetchData['id']);
+
+                    $('#student_Name').val(result.FetchData['name']);
+                    $('#student_Email').val(result.FetchData['email']);
+                    $('#student_GradeLevel').val(result.FetchData['grade_level']);
+                    $('#student_Strand').val(result.FetchData['strand']);
+                    $('#student_Section').val(result.FetchData['section']);
+                    $('#student_Class').val(result.FetchData['class']);
+                }
+                else if(resut.FetchConditionFailed){
+                    // code the response
+                }
+                else {
+                    //
+                }
+            },
+            error:function(){
+                //
+            }
+        });
+    });
+    $(document).on('submit','#save_UpdateStudent',function(e){
+        e.preventDefault();
+
+        var formData = new FormData(this);
+        formData.append("update_student",true)
+        var url = '<?=baseurl()?>/admin/update_student';
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(result){
+                if(result){
+                    alert();
+                }
+            },
+            error: function(){
+
+            }
+        });
+    });
+
     //auto hide alert function
     function showAlert(type = '', msg = '', containerId = '') {
         if (!(type == '' && msg == '' && containerId == '')) {
-            var alertHtml = '<div id="autoFadeAlert" class="shadow alert alert-' + type + ' alert-dismissible fade show" role="alert">' +
-                msg + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' + '</div>';
+            var alertHtml = ' <div class=" "> <div id="autoFadeAlert" class=" shadow alert alert-' + type + ' alert-dismissible fade show" role="alert">' +
+                msg + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' + '</div> </div>';
 
-            clearTimeout(alertTimeout);
+            
 
             $(containerId).html(alertHtml);
-            setTimeout(function() {
 
-                $('#autoFadeAlert').alert('close');
-            }, 2500);
+            setTimeout(function() {
+            $('#autoFadeAlert').alert('close');
+        }, 9000);
+
         } else {
 
             $('#autoFadeAlert').alert('close');
         }
     }
-    //
+
+    //auto hide toast function
     function showToast(type, title, body, containerId) {
-    const toastId = 'liveToast_' + Date.now();
-    var toastBody = `
-        <div id="${toastId}" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="bg-${type} text-white toast-header">
-                <strong class="me-auto">${title}</strong>
-                <small class="timeAgo">Just now</small>
+        var newBody = body;
+        var toastBody = `
+        <div id="liveToast" class="toast show fade hide w-auto" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class=" toast-header">
+                <strong class="me-auto">${title} </strong>
+                <small></small>
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
-            <div class="toast-body text-white bg-${type}">${body}</div>
-        </div>
-    `;
+            <div class="toast-body accordion-collapse "> <i class="fa-solid fa-xl fa-circle-check me-1 mb-2" style="color: #1fbd0a;"></i> ${newBody} </div></div>`;
+        $(containerId).html(toastBody);
 
-    $(containerId).html(toastBody);
 
-    const timestamp = Date.now();
-
-    // Update the "X mins ago" text every minute
-    const intervalId = setInterval(function () {
-        updateTimestamp($(`#${toastId} .timeAgo`), timestamp);
-    }, 60000);
-
-    setTimeout(function () {
-        // Hide the toast after 30 seconds
-        $(`#${toastId}`).toast('hide');
-        clearInterval(intervalId); // Stop the interval when hiding the toast
-    }, 30000);
-
-    $(`#${toastId}`).toast('show');
-}
-
-function updateTimestamp(element, timestamp) {
-    const currentTime = Date.now();
-    const minutesAgo = Math.floor((currentTime - timestamp) / 60000);
-
-    console.log('Timestamp:', timestamp);
-    console.log('Current Time:', currentTime);
-    console.log('Minutes Ago:', minutesAgo);
-
-    element.text(minutesAgo === 0 ? 'Just now' : `${minutesAgo} mins ago`);
-}
-
+        setTimeout(function() {
+            $('#liveToast').toast('hide');
+        }, 6500);
+    }
 
 </script>
 
