@@ -149,7 +149,7 @@ require_once __DIR__ . '/partials/Header.inc.php'; //HEADER
       </section> SERVICES -->
 
   <section class="contact-section text-light" id="contact">
-   
+
   </section> <!-- CONTACT -->
 </main>
 <script>
@@ -159,11 +159,11 @@ require_once __DIR__ . '/partials/Header.inc.php'; //HEADER
 
     // Scroll to the section
     if (section) {
-        section.scrollIntoView({
-            behavior: 'smooth' // Optional: Add smooth scrolling effect
-        });
+      section.scrollIntoView({
+        behavior: 'smooth' // Optional: Add smooth scrolling effect
+      });
     }
-}
+  }
 </script>
 <?php
 require_once(__DIR__ . '/partials/Footer.inc.php');

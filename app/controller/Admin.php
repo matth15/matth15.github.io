@@ -187,24 +187,42 @@ class Admin extends Controller
             $studentId = filter_var($param1, FILTER_SANITIZE_NUMBER_INT);
 
             $studentData = $this->studentmodel->fetchStudentProfile($studentId);
-            if($studentData){
-                $response = ["FetchConditionSuccess" => true , "FetchData" => $studentData]; 
-            }
-            else {
-                $response = ["FetchConditionFailed" => true , "FetchConditionMessage" => "Student ID not found." ];
+            if ($studentData) {
+                $response = ["FetchConditionSuccess" => true, "FetchData" => $studentData];
+            } else {
+                $response = ["FetchConditionFailed" => true, "FetchConditionMessage" => "Student ID not found."];
             }
             header("Content-Type: application/json");
             echo json_encode($response);
         }
     }
 
-    public function update_student(){
-        $data =[];
-        $response = [];
-        if($this->request->isPost()){
-            if($this->request->data('update_student')){
+    public function update_student()
+    {
+
+        if ($this->request->isPost()) {
+            $data = [];
+            $response = [];
+
+            if ($this->request->data('update_student')) {
+
+                //csrf token here
+
+                $id = filter_var($this->request->data($_POST['student_id']), FILTER_SANITIZE_STRING);
+                $name = filter_var($this->request->data($_POST['student_Name']), FILTER_SANITIZE_STRING);
+                $email = filter_var($this->request->data($_POST['student_Email']), FILTER_SANITIZE_EMAIL);
+                $strand = filter_var($this->request->data($_POST['student_Strand']), FILTER_SANITIZE_STRING);
+                $class = filter_var($this->request->data('student_Class'),FILTER_SANITIZE_STRING);
+                $grade = filter_var($this->request->data($_POST['student_GradeLevel']), FILTER_SANITIZE_STRING);
+
+                $result = $this->studentmodel->updateStudentData($name,$email,$strand,$grade,$class,$id);
+                if ($result) {
+                    $response = ['UpdateSuccess' => true, 'UpdateSuccessMessage' => "Update success!"];
+                } else {
+                    $response = ['UpdateFailed' => true, 'UpdateFailedMessage' => "Update Failed"];
+                }
                 
-                echo json_encode(true);
+                echo json_encode($response);
             }
         }
     }

@@ -9,6 +9,7 @@
 <script type="text/javascript">
     $(document).ready(function() {
 
+        // add student data function
         $('#addStudentSubmit').click(function() {
             var data = {
                 csrf_token: $('#csrf_token').val(),
@@ -26,24 +27,23 @@
             $.ajax({
                 type: 'POST',
                 url: '<?= baseurl() ?>/admin/add_student',
-                data: 
-                   { data },
+                data: {
+                    data
+                },
                 success: function(response) {
                     showAlert();
                     if (response.Success) {
                         $('#student_form')[0].reset();
                         $('#addStudentModal').modal('hide');
                         $('#studentTable').load(location.href + " #studentTable ")
-                        showToast('success','Inset student data', response.SuccessMessage , '#toastContainer');
+                        showToast('success', 'Inset student data', response.SuccessMessage, '#toastContainer');
 
                     } else if (response.ValidationError) {
                         showAlert('danger', response.ValidationMessage, '#addStudentModalAlert');
-                    } 
-                    else if(response.TechnicalError){
-                        showAlert('warning',response.TechnicalMessage,'#addStudentModalAlert');
-                    }
-                    else {
-                        showAlert('warning', 'Insert failed. There is no response in ajax. ','#addStudentModalAlert');
+                    } else if (response.TechnicalError) {
+                        showAlert('warning', response.TechnicalMessage, '#addStudentModalAlert');
+                    } else {
+                        showAlert('warning', 'Insert failed. There is no response in ajax. ', '#addStudentModalAlert');
                     }
                 },
                 error: function() {
@@ -52,61 +52,70 @@
             });
         });
         //
-
-
-
     });
     //edit student data 
-    $(document).on('click','.edit_StudentData', function(){
+    $(document).on('click', '.edit_StudentData', function() {
         var studentId = $(this).val();
-        var url = '<?= baseurl() ?>/admin/edit_student/'+studentId; 
+        var url = '<?= baseurl() ?>/admin/edit_student/' + studentId;
 
         $.ajax({
             type: "GET",
             url: url,
-            success: function(result){
+            success: function(result) {
 
-                if(result.FetchConditionSuccess){
+                if (result.FetchConditionSuccess) {
                     $('#student_id').val(result.FetchData['id']);
-
                     $('#student_Name').val(result.FetchData['name']);
                     $('#student_Email').val(result.FetchData['email']);
                     $('#student_GradeLevel').val(result.FetchData['grade_level']);
                     $('#student_Strand').val(result.FetchData['strand']);
                     $('#student_Section').val(result.FetchData['section']);
                     $('#student_Class').val(result.FetchData['class']);
-                }
-                else if(resut.FetchConditionFailed){
+
+                } else if (resut.FetchConditionFailed) {
                     // code the response
-                }
-                else {
+                } else {
                     //
                 }
             },
-            error:function(){
+            error: function() {
                 //
             }
         });
     });
-    $(document).on('submit','#save_UpdateStudent',function(e){
+    //save update data function
+    $(document).on('submit', '#save_UpdateStudent', function(e) {
         e.preventDefault();
 
-        var formData = new FormData(this);
-        formData.append("update_student",true)
-        var url = '<?=baseurl()?>/admin/update_student';
+        var formData = new FormData($('#save_UpdateStudent')[0]);
+
+        formData.append("update_student", true);
+        // console.log(formData);
+        // for (var pair of formData.entries()) {
+        //     console.log(pair[0] + ': ' + pair[1]);
+        // }
+        var url = '<?= baseurl() ?>/admin/update_student';
         $.ajax({
             type: 'POST',
             url: url,
             data: formData,
             processData: false,
             contentType: false,
-            success: function(result){
-                if(result){
-                    alert();
+            success: function(result) {
+                var res = jQuery.parseJSON(result);
+                if (res.UpdateSuccess) {
+                    $('#save_UpdateStudent')[0].reset();
+                    $('#editStudentModal').modal('hide');
+                    showToast('success', 'Update Student Data', res.UpdateSuccessMessage, '#toastContainer');
+                } else if (res.UpdateFailed) {
+                   
+                    showAlert('warning', res.UpdateFailedMessage, '#updateStudentModalAlert');
+                } else {
+                   alert("error update student")
                 }
             },
-            error: function(){
-
+            error: function() {
+                alert("error on update student form");
             }
         });
     });
@@ -117,13 +126,13 @@
             var alertHtml = ' <div class=" "> <div id="autoFadeAlert" class=" shadow alert alert-' + type + ' alert-dismissible fade show" role="alert">' +
                 msg + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' + '</div> </div>';
 
-            
+
 
             $(containerId).html(alertHtml);
 
             setTimeout(function() {
-            $('#autoFadeAlert').alert('close');
-        }, 9000);
+                $('#autoFadeAlert').alert('close');
+            }, 9000);
 
         } else {
 
@@ -149,7 +158,6 @@
             $('#liveToast').toast('hide');
         }, 6500);
     }
-
 </script>
 
 <script>

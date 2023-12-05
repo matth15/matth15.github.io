@@ -60,7 +60,7 @@
                     <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#addStudentModal" id="addStudentModalBtn">
                         <span class="fa-solid fa-plus me-2"></span>Add Student
                     </button>
-                    <!-- Modal Add Student -->
+                   
                     <div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -101,9 +101,14 @@
                                             <div class="col col-6">
                                                 <select id="strand" class="form-select" aria-label="Default select example">
                                                     <option selected disabled>Select Strand</option>
-                                                    <option value="1">One</option>
-                                                    <option value="2">Two</option>
-                                                    <option value="3">Three</option>
+                                                    <option value="abm">ABM</option> 
+                                                    <option value="gas">GAS</option>
+                                                    <option value="art_and_design">TVL ART & DESIGN</option>
+                                                    <option value="he">TVL HE</option>
+                                                    <option value="humss">HUMSS</option>
+                                                    <option value="ict">TVL ICT</option>
+                                                    <option value="stem">STEM</option>
+                                                    
                                                 </select>
                                             </div>
                                         </div>
@@ -118,7 +123,8 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> <!-- Modal Add Student -->
+
                 <div class="modal fade delete_StudentModal"  id="deleteStudentModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -153,6 +159,9 @@
                                 <input type="hidden" name="student_id" id="student_id">
                             <div class="modal-body">
                                 <div class="row">
+                                <div class="col col-12" id="updateStudentModalAlert">
+                                            </div>
+                                            <hr>
                                 <div class="input-group col-12 ">
                                     <span class="input-group-text">Name</span>
                                     <input class="form-control" type="text" name="student_Name" id="student_Name" >
@@ -163,7 +172,7 @@
                                 </div>
                                 <div class="input-group col-12 ">
                                 <label class="input-group-text" for="student_GradeLevel">Grade</label>
-                                        <select class="form-select" id="student_GradeLevel">
+                                        <select class="form-select" id="student_GradeLevel" name="student_GradeLevel">
                                             <option value="g11">Grade 11</option>
                                             <option value="g12">Grade 12</option>
                                         </select>
@@ -186,8 +195,8 @@
                                          <?php
                                             // Loop to generate options from 'A' to 'Z'
                                             for ($letter = 'A'; $letter <= 'Z'; $letter++) {
-                                                echo '<option value="' . $letter . '">'.$letter.'</option>';
-                                                if($letter === 'Z'){
+                                                echo '<option value="' . $letter . '">' . $letter . '</option>';
+                                                if ($letter === 'Z') {
                                                     break;
                                                 }
                                             }
