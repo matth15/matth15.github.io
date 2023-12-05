@@ -198,11 +198,11 @@ class Admin extends Controller
     }
 
     public function update_student()
-    {
+    {  $data = [];
+        $response = [];
 
         if ($this->request->isPost()) {
-            $data = [];
-            $response = [];
+          
 
             if ($this->request->data('update_student')) {
 

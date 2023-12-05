@@ -32,7 +32,7 @@ class StudentModel extends Model
     }
     //
     public function updateStudentData($name,$email,$strand,$grade,$class,$id){
-        $sql = "UPDATE students_data SET name = :name, email = :email, strand = :strand, grade_level = :grade, class = :class WHERE id = :id ";
+        $sql = "UPDATE students_data SET name = :name , email = :email, strand = :strand, grade_level = :grade, class = :class WHERE id = :id ";
         $this->db->prepare($sql);
         $this->db->bindValue(":id",$id);
         $this->db->bindValue(":name",$name);
