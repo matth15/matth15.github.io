@@ -60,4 +60,22 @@ class Teacher extends Controller
 
         $this->view('teacher/studentlist', $data);
     }
+    public function view_student($param1 ='' , $param2=''){
+
+        $data = [];
+        $response = [];
+        if(!empty($param1)){
+            $studentId = filter_var($param1, FILTER_SANITIZE_NUMBER_INT);
+
+            $studentData = $this->studentmodel->fetchStudentProfile($studentId);
+            if ($studentData) {
+                $response = ["FetchConditionSuccess" => true, "FetchData" => $studentData];
+            } else {
+                $response = ["FetchConditionFailed" => true, "FetchConditionMessage" => "Student ID not found."];
+            }
+            header("Content-Type: application/json");
+            echo json_encode($response);
+        }
+
+    }
 }

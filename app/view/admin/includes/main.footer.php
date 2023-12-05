@@ -4,7 +4,7 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="<?= baseurl() ?>/public/assets/js/bootstrap.bundle.min.js"></script>
-<!-- <script src="<?= baseurl() ?>/public/assets/js/main.script.js"></script> -->
+
 
 <script type="text/javascript">
     $(document).ready(function() {
@@ -52,73 +52,161 @@
             });
         });
         //
-    });
-    //edit student data 
-    $(document).on('click', '.edit_StudentData', function() {
-        var studentId = $(this).val();
-        var url = '<?= baseurl() ?>/admin/edit_student/' + studentId;
+        //edit student data 
+        $(document).on('click', '.edit_StudentData', function() {
+            var studentId = $(this).val();
+            var url = '<?= baseurl() ?>/admin/get_student/' + studentId;
 
-        $.ajax({
-            type: "GET",
-            url: url,
-            success: function(result) {
+            $.ajax({
+                type: "GET",
+                url: url,
+                success: function(result) {
 
-                if (result.FetchConditionSuccess) {
-                    $('#student_id').val(result.FetchData['id']);
-                    $('#student_Name').val(result.FetchData['name']);
-                    $('#student_Email').val(result.FetchData['email']);
-                    $('#student_GradeLevel').val(result.FetchData['grade_level']);
-                    $('#student_Strand').val(result.FetchData['strand']);
-                    $('#student_Section').val(result.FetchData['section']);
-                    $('#student_Class').val(result.FetchData['class']);
+                    if (result.FetchConditionSuccess) {
+                        $('#student_id').val(result.FetchData['id']);
+                        $('#student_Name').val(result.FetchData['name']);
+                        $('#student_Email').val(result.FetchData['email']);
+                        $('#student_GradeLevel').val(result.FetchData['grade_level']);
+                        $('#student_Strand').val(result.FetchData['strand']);
+                        $('#student_Section').val(result.FetchData['section']);
+                        $('#student_Class').val(result.FetchData['strand_class']);
 
-                } else if (resut.FetchConditionFailed) {
-                    // code the response
-                } else {
+                    } else if (resut.FetchConditionFailed) {
+                        // code the response
+                    } else {
+                        //
+                    }
+                },
+                error: function() {
                     //
                 }
-            },
-            error: function() {
-                //
-            }
+            });
         });
-    });
-    //save update data function
-    $(document).on('submit', '#save_UpdateStudent', function(e) {
-        e.preventDefault();
+        //save update data function
+        $(document).on('submit', '#save_UpdateStudent', function(e) {
+            e.preventDefault();
 
-        var formData = new FormData($('#save_UpdateStudent')[0]);
+            var formData = new FormData(this);
 
-        formData.append("update_student", true);
-        // console.log(formData);
-        // for (var pair of formData.entries()) {
-        //     console.log(pair[0] + ': ' + pair[1]);
-        // }
-        var url = '<?= baseurl() ?>/admin/update_student';
-        $.ajax({
-            type: 'POST',
-            url: url,
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(result) {
-                var res = jQuery.parseJSON(result);
-                if (res.UpdateSuccess) {
-                    $('#save_UpdateStudent')[0].reset();
-                    $('#editStudentModal').modal('hide');
-                    showToast('success', 'Update Student Data', res.UpdateSuccessMessage, '#toastContainer');
-                } else if (res.UpdateFailed) {
-                   
-                    showAlert('warning', res.UpdateFailedMessage, '#updateStudentModalAlert');
-                } else {
-                   alert("error update student")
+            formData.append("update_student", true);
+            // console.log(formData);
+            // for (var pair of formData.entries()) {
+            //     console.log(pair[0] + ': ' + pair[1]);
+            // }
+            var url = '<?= baseurl() ?>/admin/update_student';
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(result) {
+                    var res = jQuery.parseJSON(result);
+                    if (res.UpdateSuccess) {
+                        $('#studentTable').load(location.href + " #studentTable ")
+                        $('#save_UpdateStudent')[0].reset();
+                        $('#editStudentModal').modal('hide');
+                        showToast('success', 'Update Student Data', res.UpdateSuccessMessage, '#toastContainer');
+                    } else if (res.UpdateFailed) {
+                        showAlert('warning', res.UpdateFailedMessage, '#updateStudentModalAlert');
+                    } else {
+                        alert("error update student")
+                    }
+                },
+                error: function() {
+                    alert("error on update student form");
                 }
-            },
-            error: function() {
-                alert("error on update student form");
-            }
+            });
         });
+        //view student data
+        $(document).on('click', '.view_StudentData', function(e) {
+            e.preventDefault();
+            var studentId = $(this).val();
+            var url = '<?= baseurl() ?>/admin/view_student/' + studentId;
+
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: function(result) {
+                    if (result.FetchConditionSuccess) {
+                        $('#view_studentId').val(result.FetchData['id']);
+                        $('#view_studentName').val(result.FetchData['name']);
+                        $('#view_studentEmail').val(result.FetchData['email']);
+                        $('#view_studentGrade').val(result.FetchData['grade_level'].replace('g', 'Grade '));
+                        $('#view_studentStrand').val(result.FetchData['strand'].toUpperCase());
+                        $('#view_studentSection').val(result.FetchData['section']);
+                        $('#view_studentUniqueId').val(result.FetchData['unique_id']);
+                        $('#view_studentDateCreated').val(result.FetchData['created_at']);
+
+                    } else if (result.FetchConditionFailed) {
+                        showAlert('warning', result.FetchConditionMessage, '#viewStudentModalAlert');
+                    } else {
+                        alert("failed to view student data");
+                    }
+                },
+                error: function() {
+                    alert('failed to view student data');
+                }
+            });
+        });
+        //delete student data
+        $(document).on('click', '.delete_StudentData', function() {
+            var studentId = $(this).val();
+            var url = '<?= baseurl() ?>/admin/get_student/' + studentId;
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: function(result) {
+                    if (result.FetchConditionSuccess) {
+                        $('#delete_StudentEmail').text(result.FetchData['email']);
+                        $('#delete_StudentId').val(result.FetchData['id']);
+
+                    } else if (result.FetchConditionFailed) {
+                        alert("fetch failed");
+                    } else {
+                        alert("asdf");
+                    }
+                },
+                error: function() {
+                    alert("adf");
+                }
+            });
+        });
+        $(document).on('submit', '#delete_StudentData', function(e) {
+                e.preventDefault();
+                var data = {
+                    'delete_StudentId': $("#delete_StudentId").val(),
+                    'delete_StudentUniqueId': $("#delete_StudentUniqueId").val()
+                };
+                console.log(data);
+
+                var url = '<?= baseurl() ?>/admin/delete_student';
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: {
+                        data,
+                        'delete_student': true
+                    },
+                    success: function(response) {
+                        if (response.SuccessDeleteStudent) {
+                            $('#delete_StudentData')[0].reset();
+                            $('#deleteStudentModal').modal('hide');
+                            $('#studentTable').load(location.href + " #studentTable ");
+                            showToast('success', 'Delete Student Data', response.SuccessMessage, '#toastContainer');
+                        } else if (response.FailedDeleteStudent) {
+                            showAlert('danger', response.FailedMessage, '#deleteStudentModalAlert');
+                        } else {
+                            showAlert('danger', "AJAX no response.", '#deleteStudentModalAlert');
+                        }
+                    },
+                    error: function() {
+                        alert("error in main delete student");
+                    }
+                });
+            });
     });
+
 
     //auto hide alert function
     function showAlert(type = '', msg = '', containerId = '') {

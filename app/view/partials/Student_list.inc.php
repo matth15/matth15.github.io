@@ -12,38 +12,43 @@
                         </div>
                         <div class="modal-body">
                             <div class="row">
+                            <div class="col col-12" id="viewStudentModalAlert">
+                                            </div>
+                                            <hr>
                                 <div class="input-group col-12 ">
                                     <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
-                                    <input class="form-control" type="text" value="' . $val['name'] . '" aria-label="Disabled input example" disabled readonly>
+                                    <input class="form-control" type="text" id="view_studentName" disabled readonly>
                                 </div>
                                 <div class="input-group col-12 my-3">
                                     <span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
-                                    <input class="form-control" type="text" value="' . $val['email'] . '" aria-label="Disabled input example" disabled readonly>
+                                    <input class="form-control" type="text" id="view_studentEmail" disabled readonly>
                                 </div>
                                 <div class="input-group col-12 ">
                                     <span class="input-group-text"><i class="fa-solid fa-g"></i></span>
-                                    <input class="form-control" type="text" value="Grade ' . str_replace(str_split(" g"), '' , $val['grade_level']) . '" aria-label="Disabled input example" disabled readonly>
+                                    <input class="form-control" type="text" id="view_studentGrade" disabled readonly>
                                         </div>
                                         <div class="input-group col-12 my-3">
                                         <span class="input-group-text"><i class="fa-solid fa-book-open"></i></span>
-                                        <input class="form-control" type="text" value="' . strtoupper($val['strand']) . '" aria-label="Disabled input example" disabled readonly>
+                                        <input class="form-control" type="text" id="view_studentStrand" disabled readonly>
                                         </div>
                                         <div class="input-group col-12">
                                         <span class="input-group-text"><i class="fa-solid fa-s"></i></span>
-                                        <input class="form-control" type="text" value="' . $val['section'] . '" aria-label="Disabled input example" disabled readonly>
+                                        <input class="form-control" type="text" id="view_studentSection" disabled readonly>
                                         </div>
+                                       <?php if(Session::getUserType()==="admin") : ?>
                                         <div class="input-group col-12 my-3">
                                         <span class="input-group-text"><i class="fa-solid fa-key"></i></span>
-                                        <input class="form-control" type="text" value="' . $val['id'] . '" aria-label="Disabled input example" disabled readonly>
+                                        <input class="form-control" type="text" id="view_studentId" disabled readonly>
                                         </div>
                                         <div class="input-group col-12">
                                         <span class="input-group-text"><i class="fa-solid fa-shield"></i></span>
-                                        <input class="form-control" type="text" value="' . $val['unique_id'] . '" aria-label="Disabled input example" disabled readonly>
+                                        <input class="form-control" type="text" id="view_studentUniqueId" disabled readonly>
                                         </div>
                                         <div class="input-group col-12 my-2">
                                         <span class="input-group-text"><i class="fa-solid fa-calendar-days"></i></span>
-                                        <input class="form-control" type="text" value="' . $formattedDate . '" aria-label="Disabled input example" disabled readonly>
+                                        <input class="form-control" type="text" id="view_studentDateCreated" disabled readonly>
                                         </div>
+                                        <?php  endif;?>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -132,14 +137,17 @@
                                 <h5 class="modal-title" id="exampleModalLabel">Delete Student Data</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <form action="" method="POST">
-                                <div class="modal-body">
-                                    <p class="text-secondary"> Enter <strong>' . $val['email'] . '</strong> unique ID to delete data. </p>
-                                    <input class="form-control" type="text" placeholder="Enter Unique ID" name="" id="">
+                            <form id="delete_StudentData" method="POST">
+                            <input type="hidden" name="delete_StudentId" id="delete_StudentId">
+                                <div class="modal-body">  <div class="col col-12" id="deleteStudentModalAlert">
+                                            </div>
+                                            <hr>
+                                    <p class="text-secondary"> Enter <strong id="delete_StudentEmail"></strong> unique ID to delete student data. </p>
+                                    <input class="form-control" type="text" placeholder="Enter Unique ID" name="delete_StudentUniqueId" id="delete_StudentUniqueId">
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancel</button>
-                                    <button type="button" class="btn btn-danger">Delete</button>
+                                    <button type="submit" class="btn btn-danger">Delete</button>
                                 </div>
                             </form>
                         </div>
@@ -275,18 +283,18 @@
                 <nav aria-label="Page navigation example">
                     <ul class="pagination">
                         <li class="page-item"><a class="page-link" <?= ($page_num <= 1) ? 'disabled' :
-                                                                        'href="' . baseurl() . '/admin/student_list/page/' . $previous_page . '"' ?>>Previous</a></li>
+                                                                        'href="' . baseurl() . '/'.Session::getUserType().'/student_list/page/' . $previous_page . '"' ?>>Previous</a></li>
                         <?php
                         for ($i = 1; $i <= $total_num_of_pages; $i++) {
                             if ($page_num !== $i) : ?>
-                                <li class="page-item"><a class="page-link" href="<?= baseurl() ?>/admin/student_list/page/<?= $i ?>"><?= $i ?></a></li>
+                                <li class="page-item"><a class="page-link" href="<?= baseurl() ?>/<?= Session::getUserType()?>/student_list/page/<?= $i ?>"><?= $i ?></a></li>
                             <?php else : ?>
                                 <li class="page-item"><a class="page-link active"><?= $i ?></a></li>
                         <?php endif;
                         } ?>
 
                         <li class="page-item"><a class="page-link" <?= ($page_num >= $total_num_of_pages) ? 'disabled '
-                                                                        : 'href="' . baseurl() . '/admin/student_list/page/' . $next_page . '"' ?>>Next</a></li>
+                                                                        : 'href="' . baseurl() . '/'.Session::getUserType().'/student_list/page/' . $next_page . '"' ?>>Next</a></li>
                     </ul>
                 </nav>
             </div>

@@ -2,6 +2,7 @@
 
 if (Session::getIsLoggedIn()) {
     if (Session::getUserType() !== "admin") {
+        echo "Access denied!";
         header('location : ' . baseurl());
         exit();
     }
@@ -178,7 +179,7 @@ class Admin extends Controller
         }
     }
 
-    public function edit_student($param1 = '', $param2 = '')
+    public function get_student($param1 = '', $param2 = '')
     {
 
         $data = [];
@@ -205,21 +206,28 @@ class Admin extends Controller
           
 
             if ($this->request->data('update_student')) {
-
+                
                 //csrf token here
 
-                $id = filter_var($this->request->data($_POST['student_id']), FILTER_SANITIZE_STRING);
-                $name = filter_var($this->request->data($_POST['student_Name']), FILTER_SANITIZE_STRING);
-                $email = filter_var($this->request->data($_POST['student_Email']), FILTER_SANITIZE_EMAIL);
-                $strand = filter_var($this->request->data($_POST['student_Strand']), FILTER_SANITIZE_STRING);
+                $id = filter_var($this->request->data('student_id'),FILTER_SANITIZE_NUMBER_INT);
+                $name = filter_var($this->request->data('student_Name'), FILTER_SANITIZE_STRING);
+                $email = filter_var($this->request->data('student_Email'), FILTER_SANITIZE_EMAIL);
+                $strand = filter_var($this->request->data('student_Strand'), FILTER_SANITIZE_STRING);
                 $class = filter_var($this->request->data('student_Class'),FILTER_SANITIZE_STRING);
-                $grade = filter_var($this->request->data($_POST['student_GradeLevel']), FILTER_SANITIZE_STRING);
+                $grade = filter_var($this->request->data('student_GradeLevel'), FILTER_SANITIZE_STRING);
+                
+                //validation of update data
+                // if(){
 
+                // }
+
+                if(empty($data)){
                 $result = $this->studentmodel->updateStudentData($name,$email,$strand,$grade,$class,$id);
                 if ($result) {
                     $response = ['UpdateSuccess' => true, 'UpdateSuccessMessage' => "Update success!"];
                 } else {
                     $response = ['UpdateFailed' => true, 'UpdateFailedMessage' => "Update Failed"];
+                }
                 }
                 
                 echo json_encode($response);
@@ -228,5 +236,63 @@ class Admin extends Controller
     }
     public function delete_student()
     {
+        $response = [];
+        $data = [];
+
+        if($this->request->isPost()){
+            //csrf here
+
+            if($this->request->data('delete_student')){
+
+                $data = $this->request->data('data');
+
+                $studentId = filter_var($data["delete_StudentId"],FILTER_SANITIZE_STRING);
+                $uniId = filter_var($data['delete_StudentUniqueId'],FILTER_SANITIZE_STRING);
+
+                $rule = new ValidationRules();
+
+                $studentUniId = $this->studentmodel->fetchStudentProfile($studentId)['unique_id'];
+
+                if(!$rule->isRequired($uniId)){
+                    $response = ['FailedDeleteStudent' => true, "FailedMessage" => "Unique id is Required."];
+                }
+                else {
+                    if($studentUniId == $uniId){
+                        if($this->studentmodel->deleteStudent($studentId)){
+                            $response = ['SuccessDeleteStudent' => true, "SuccessMessage" => "Delete Success!"];
+                        }
+                        else {
+                            $response = ['FailedDeleteStudent' => true, "FailedMessage" =>"Failed to delete student data in SQL."];
+                        }
+                    }
+                    else {
+                        $response = ['FailedDeleteStudent' => true, "FailedMessage" =>"Invalid Unique ID."];
+                    }
+                }
+                header("Content-Type: application/json");
+                echo json_encode($response);
+            }
+
+          
+        }
+    }
+
+    public function view_student($param1 ='' , $param2=''){
+
+        $data = [];
+        $response = [];
+        if(!empty($param1)){
+            $studentId = filter_var($param1, FILTER_SANITIZE_NUMBER_INT);
+
+            $studentData = $this->studentmodel->fetchStudentProfile($studentId);
+            if ($studentData) {
+                $response = ["FetchConditionSuccess" => true, "FetchData" => $studentData];
+            } else {
+                $response = ["FetchConditionFailed" => true, "FetchConditionMessage" => "Student ID not found."];
+            }
+            header("Content-Type: application/json");
+            echo json_encode($response);
+        }
+
     }
 }
