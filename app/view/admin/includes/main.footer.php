@@ -129,14 +129,15 @@
                 url: url,
                 success: function(result) {
                     if (result.FetchConditionSuccess) {
-                        $('#view_studentId').val(result.FetchData['id']);
-                        $('#view_studentName').val(result.FetchData['name']);
-                        $('#view_studentEmail').val(result.FetchData['email']);
-                        $('#view_studentGrade').val(result.FetchData['grade_level'].replace('g', 'Grade '));
-                        $('#view_studentStrand').val(result.FetchData['strand'].toUpperCase());
-                        $('#view_studentSection').val(result.FetchData['section']);
-                        $('#view_studentUniqueId').val(result.FetchData['unique_id']);
-                        $('#view_studentDateCreated').val(result.FetchData['created_at']);
+                        $('#view_studentId').text(result.FetchData['id']);
+                        $('#view_studentName').text(result.FetchData['name']);
+                        $('#view_studentEmail').text(result.FetchData['email']);
+                        $('#view_studentGrade').text(result.FetchData['grade_level'].replace('g', ''));
+                        $('#view_studentStrand').text(result.FetchData['strand'].toUpperCase());
+                        $('#view_studentSection').text(result.FetchData['section']);
+                        $('#view_studentClass').text(result.FetchData['strand_class']);
+                        $('#view_studentUniqueId').text(result.FetchData['unique_id']);
+                        $('#view_studentDateCreated').text(result.FetchData['created_at']);
 
                     } else if (result.FetchConditionFailed) {
                         showAlert('warning', result.FetchConditionMessage, '#viewStudentModalAlert');
@@ -158,7 +159,9 @@
                 url: url,
                 success: function(result) {
                     if (result.FetchConditionSuccess) {
-                        $('#delete_StudentEmail').text(result.FetchData['email']);
+                        $('#delete_StudentEmail').text(result.FetchData['name']);
+                        
+
                         $('#delete_StudentId').val(result.FetchData['id']);
 
                     } else if (result.FetchConditionFailed) {

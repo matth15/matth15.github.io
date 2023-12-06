@@ -5,22 +5,11 @@
                 <a href="" class="btn btn-sm btn-success"><i class="fa-solid fa-plus me-2"></i>Add Faculty</a>
               
             </div>
-            <!-- <div class="col col-lg-6 col-12 d-flex justify-content-end">
-                <nav class="navbar navbar-light">
-                    <div class="container-fluid">
-                        <form class="d-flex">
-                            <input class="form-control me-2 " type="search" placeholder="Search" aria-label="Search">
-                            <button class="btn btn-secondary" type="submit">Search</button>
-                        </form>
-                    </div>
-                </nav>
-            </div> -->
             <hr>
             <div class="col col-table col-12 ">
-                <table>
+                <table id="facultyTable" class="table-striped">
                     <tr>
                         <th>ID</th>
-                        <th>Unique ID</th>
                         <th>Name</th>
                         <th>Trace Email</th>
                         <th>Department</th>
@@ -30,7 +19,6 @@
                         echo '<tr >';
 
                         echo '<td>' . $val['id'] . '</td>';
-                        echo '<td>'.$val['unique_id'].'</td>';
                         echo '<td>' . $val['name'] . '</td>';
                         echo ' <td>' . $val['email'] . '</td>';
                         echo '<td>' . $val['department'] . ' </td>';

@@ -7,6 +7,11 @@ if (Session::getIsLoggedIn()) {
         exit();
     }
 }
+else {
+    echo "Access denied!";
+    header('location : ' . baseurl());
+    exit();
+}
 
 class Admin extends Controller
 {
@@ -214,6 +219,7 @@ class Admin extends Controller
                 $email = filter_var($this->request->data('student_Email'), FILTER_SANITIZE_EMAIL);
                 $strand = filter_var($this->request->data('student_Strand'), FILTER_SANITIZE_STRING);
                 $class = filter_var($this->request->data('student_Class'),FILTER_SANITIZE_STRING);
+                $section = filter_var($this->request->data('student_Section'),FILTER_SANITIZE_STRING);
                 $grade = filter_var($this->request->data('student_GradeLevel'), FILTER_SANITIZE_STRING);
                 
                 //validation of update data
@@ -222,7 +228,7 @@ class Admin extends Controller
                 // }
 
                 if(empty($data)){
-                $result = $this->studentmodel->updateStudentData($name,$email,$strand,$grade,$class,$id);
+                $result = $this->studentmodel->updateStudentData($name,$email,$strand,$section,$grade,$class,$id);
                 if ($result) {
                     $response = ['UpdateSuccess' => true, 'UpdateSuccessMessage' => "Update success!"];
                 } else {

@@ -1,5 +1,18 @@
 <?php
 
+if (Session::getIsLoggedIn()) {
+    if (Session::getUserType() !== "teacher") {
+        echo "Access denied!";
+        header('location : ' . baseurl());
+        exit();
+    }
+}
+else {
+    echo "Access denied!";
+    header('location : ' . baseurl());
+    exit();
+}
+
 class Teacher extends Controller
 {
     public $request;

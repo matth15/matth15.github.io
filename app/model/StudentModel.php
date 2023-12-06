@@ -31,14 +31,15 @@ class StudentModel extends Model
         return false;
     }
     //
-    public function updateStudentData($name,$email,$strand,$grade,$class,$id){
-        $sql = "UPDATE students_data SET name = :name , email = :email , strand = :strand , grade_level = :grade , strand_class = :class WHERE id = :id ";
+    public function updateStudentData($name,$email,$strand,$section,$grade,$class,$id){
+        $sql = "UPDATE students_data SET name = :name , email = :email , strand = :strand , section = :section , grade_level = :grade , strand_class = :class WHERE id = :id ";
         $this->db->prepare($sql);
         $this->db->bindValue(":id",$id);
         $this->db->bindValue(":name",$name);
         $this->db->bindValue(":email",$email);
         $this->db->bindValue(":strand",$strand);
         $this->db->bindValue(":grade",$grade);
+        $this->db->bindValue(":section",$section);
         $this->db->bindValue(":class",$class);
         if($this->db->execute()){
             return true;
