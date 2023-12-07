@@ -301,4 +301,23 @@ class Admin extends Controller
         }
 
     }
+    public function search_student(){
+        $data = [];
+        $response = [];
+       
+
+            $d = $_POST['searchData'];
+            // $searchData = filter_var($d,FILTER_SANITIZE_STRING );
+
+            $result = $this->studentmodel->searchStudent($d);
+            // if($result){
+            //     $response = ['SearchConditionSuccess' => true , 'data' => $result];
+            // }
+            // else{
+            //     $response = ['SearchConditionFailed' => true , "No student data found."];
+            // }
+            header("Content-Type: application/json");
+            echo json_encode(['d' => true , "data" => $result]);
+        
+    }
 }

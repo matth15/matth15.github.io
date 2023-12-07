@@ -9,6 +9,32 @@
 <script type="text/javascript">
     $(document).ready(function() {
 
+        $(document).on('keyup',"#student_SearchBar",function(){
+                var data = $(this).val();
+                $.ajax({
+                    type:'POST',
+                    url: '<?= baseurl() ?>/admin/search_student',
+                    data:{ searchData:data} ,
+                    success:function(res){
+                        if(res.d){
+                            table = "<tr>"+
+                            "<td>"+res.data['name']+"</td>"+
+                            "<td>"+res.data['email']+"</td>"+
+                            "<td>"+res.data['grade_level']+"</td>"+
+                            "<td>"+res.data['strand']+"</td>"+
+                            "</tr>";
+                            $('#studentTb').html(table);
+                         
+                        }
+                        else {
+                            alert("no response");
+                        }
+                    },
+                    error:function(){
+                        alert("error occured in search bar");
+                    }
+                });
+            });
         // add student data function
         $('#addStudentSubmit').click(function() {
             var data = {
@@ -35,7 +61,7 @@
                     if (response.Success) {
                         $('#student_form')[0].reset();
                         $('#addStudentModal').modal('hide');
-                        $('#studentTable').load(location.href + " #studentTable ")
+                        $('#studentTable').load(location.href + " #studentTable ");
                         showToast('success', 'Inset student data', response.SuccessMessage, '#toastContainer');
 
                     } else if (response.ValidationError) {
@@ -176,6 +202,7 @@
             });
         });
         $(document).on('submit', '#delete_StudentData', function(e) {
+
                 e.preventDefault();
                 var data = {
                     'delete_StudentId': $("#delete_StudentId").val(),
@@ -208,7 +235,8 @@
                     }
                 });
             });
-    });
+          
+        });
 
 
     //auto hide alert function

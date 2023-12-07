@@ -56,4 +56,16 @@ class StudentModel extends Model
         }
         return false;
     }
+
+    public function searchStudent($search){
+        $sql = "SELECT * FROM students_data WHERE name LIKE '$search%' OR email LIKE '$search%'";
+        $this->db->prepare($sql);
+        if($this->db->execute()){
+            $res = $this->db->fetchAssociative();
+            if( $res > 1){
+                return $res;
+            }
+        }
+        return false;
+    }
 }
