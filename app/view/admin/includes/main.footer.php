@@ -8,7 +8,7 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-
+      
         $(document).on('keyup',"#student_SearchBar",function(){
                 var data = $(this).val();
                 $.ajax({
@@ -16,18 +16,15 @@
                     url: '<?= baseurl() ?>/admin/search_student',
                     data:{ searchData:data} ,
                     success:function(res){
-                        if(res.d){
-                            table = "<tr>"+
-                            "<td>"+res.data['name']+"</td>"+
-                            "<td>"+res.data['email']+"</td>"+
-                            "<td>"+res.data['grade_level']+"</td>"+
-                            "<td>"+res.data['strand']+"</td>"+
-                            "</tr>";
-                            $('#studentTb').html(table);
+                        if(res.SearchConditionSuccess){
+                            $('#studentTb').html(res.data);
                          
                         }
+                        else if(res.SearchConditionFailed){
+                            $('#studentTb').html(res.data);
+                        }
                         else {
-                            alert("no response");
+
                         }
                     },
                     error:function(){
@@ -57,7 +54,7 @@
                     data
                 },
                 success: function(response) {
-                    showAlert();
+                  
                     if (response.Success) {
                         $('#student_form')[0].reset();
                         $('#addStudentModal').modal('hide');
@@ -66,6 +63,7 @@
 
                     } else if (response.ValidationError) {
                         showAlert('danger', response.ValidationMessage, '#addStudentModalAlert');
+                       
                     } else if (response.TechnicalError) {
                         showAlert('warning', response.TechnicalMessage, '#addStudentModalAlert');
                     } else {
@@ -75,6 +73,7 @@
                 error: function() {
                     alert();
                 }
+                
             });
         });
         //
@@ -201,6 +200,7 @@
                 }
             });
         });
+        //
         $(document).on('submit', '#delete_StudentData', function(e) {
 
                 e.preventDefault();
@@ -249,9 +249,9 @@
 
             $(containerId).html(alertHtml);
 
-            setTimeout(function() {
-                $('#autoFadeAlert').alert('close');
-            }, 9000);
+            // setTimeout(function() {
+            //     $('#autoFadeAlert').alert('close');
+            // }, 9000);
 
         } else {
 

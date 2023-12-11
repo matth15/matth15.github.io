@@ -6,8 +6,7 @@ if (Session::getIsLoggedIn()) {
         header('location : ' . baseurl());
         exit();
     }
-}
-else {
+} else {
     echo "Access denied!";
     header('location : ' . baseurl());
     exit();
@@ -204,38 +203,39 @@ class Admin extends Controller
     }
 
     public function update_student()
-    {  $data = [];
+    {
+        $data = [];
         $response = [];
 
         if ($this->request->isPost()) {
-          
+
 
             if ($this->request->data('update_student')) {
-                
+
                 //csrf token here
 
-                $id = filter_var($this->request->data('student_id'),FILTER_SANITIZE_NUMBER_INT);
+                $id = filter_var($this->request->data('student_id'), FILTER_SANITIZE_NUMBER_INT);
                 $name = filter_var($this->request->data('student_Name'), FILTER_SANITIZE_STRING);
                 $email = filter_var($this->request->data('student_Email'), FILTER_SANITIZE_EMAIL);
                 $strand = filter_var($this->request->data('student_Strand'), FILTER_SANITIZE_STRING);
-                $class = filter_var($this->request->data('student_Class'),FILTER_SANITIZE_STRING);
-                $section = filter_var($this->request->data('student_Section'),FILTER_SANITIZE_STRING);
+                $class = filter_var($this->request->data('student_Class'), FILTER_SANITIZE_STRING);
+                $section = filter_var($this->request->data('student_Section'), FILTER_SANITIZE_STRING);
                 $grade = filter_var($this->request->data('student_GradeLevel'), FILTER_SANITIZE_STRING);
-                
+
                 //validation of update data
                 // if(){
 
                 // }
 
-                if(empty($data)){
-                $result = $this->studentmodel->updateStudentData($name,$email,$strand,$section,$grade,$class,$id);
-                if ($result) {
-                    $response = ['UpdateSuccess' => true, 'UpdateSuccessMessage' => "Update success!"];
-                } else {
-                    $response = ['UpdateFailed' => true, 'UpdateFailedMessage' => "Update Failed"];
+                if (empty($data)) {
+                    $result = $this->studentmodel->updateStudentData($name, $email, $strand, $section, $grade, $class, $id);
+                    if ($result) {
+                        $response = ['UpdateSuccess' => true, 'UpdateSuccessMessage' => "Update success!"];
+                    } else {
+                        $response = ['UpdateFailed' => true, 'UpdateFailedMessage' => "Update Failed"];
+                    }
                 }
-                }
-                
+
                 echo json_encode($response);
             }
         }
@@ -245,49 +245,45 @@ class Admin extends Controller
         $response = [];
         $data = [];
 
-        if($this->request->isPost()){
+        if ($this->request->isPost()) {
             //csrf here
 
-            if($this->request->data('delete_student')){
+            if ($this->request->data('delete_student')) {
 
                 $data = $this->request->data('data');
 
-                $studentId = filter_var($data["delete_StudentId"],FILTER_SANITIZE_STRING);
-                $uniId = filter_var($data['delete_StudentUniqueId'],FILTER_SANITIZE_STRING);
+                $studentId = filter_var($data["delete_StudentId"], FILTER_SANITIZE_STRING);
+                $uniId = filter_var($data['delete_StudentUniqueId'], FILTER_SANITIZE_STRING);
 
                 $rule = new ValidationRules();
 
                 $studentUniId = $this->studentmodel->fetchStudentProfile($studentId)['unique_id'];
 
-                if(!$rule->isRequired($uniId)){
+                if (!$rule->isRequired($uniId)) {
                     $response = ['FailedDeleteStudent' => true, "FailedMessage" => "Unique id is Required."];
-                }
-                else {
-                    if($studentUniId == $uniId){
-                        if($this->studentmodel->deleteStudent($studentId)){
+                } else {
+                    if ($studentUniId == $uniId) {
+                        if ($this->studentmodel->deleteStudent($studentId)) {
                             $response = ['SuccessDeleteStudent' => true, "SuccessMessage" => "Delete Success!"];
+                        } else {
+                            $response = ['FailedDeleteStudent' => true, "FailedMessage" => "Failed to delete student data in SQL."];
                         }
-                        else {
-                            $response = ['FailedDeleteStudent' => true, "FailedMessage" =>"Failed to delete student data in SQL."];
-                        }
-                    }
-                    else {
-                        $response = ['FailedDeleteStudent' => true, "FailedMessage" =>"Invalid Unique ID."];
+                    } else {
+                        $response = ['FailedDeleteStudent' => true, "FailedMessage" => "Invalid Unique ID."];
                     }
                 }
                 header("Content-Type: application/json");
                 echo json_encode($response);
             }
-
-          
         }
     }
 
-    public function view_student($param1 ='' , $param2=''){
+    public function view_student($param1 = '', $param2 = '')
+    {
 
         $data = [];
         $response = [];
-        if(!empty($param1)){
+        if (!empty($param1)) {
             $studentId = filter_var($param1, FILTER_SANITIZE_NUMBER_INT);
 
             $studentData = $this->studentmodel->fetchStudentProfile($studentId);
@@ -299,25 +295,39 @@ class Admin extends Controller
             header("Content-Type: application/json");
             echo json_encode($response);
         }
-
     }
-    public function search_student(){
+    public function search_student()
+    {
         $data = [];
         $response = [];
-       
 
-            $d = $_POST['searchData'];
-            // $searchData = filter_var($d,FILTER_SANITIZE_STRING );
 
-            $result = $this->studentmodel->searchStudent($d);
-            // if($result){
-            //     $response = ['SearchConditionSuccess' => true , 'data' => $result];
-            // }
-            // else{
-            //     $response = ['SearchConditionFailed' => true , "No student data found."];
-            // }
-            header("Content-Type: application/json");
-            echo json_encode(['d' => true , "data" => $result]);
-        
+        $d = $_POST['searchData'];
+        // $d = filter_var($re,FILTER_SANITIZE_STRING );
+
+        $result = $this->studentmodel->searchStudent($d);
+        foreach ($result as $results) {
+            $data[] = '
+                    <tr>
+                    <td>' . $results['id'] . '</td>
+                    <td>' . $results['name'] . '</td>
+                    <td>' . $results['email'] . '</td>
+                    <td>' . str_replace('g', '', $results['grade_level']) . '</td>
+                    <td>' . strtoupper($results['strand']) . '</td>
+                    <td>
+                    <button type="button" class="btn btn-sm btn-info me-2 text-white view_StudentData" value="' . $results['id'] . '" data-bs-toggle="modal" data-bs-target="#viewStudentModal"><span class="text-white fa-solid fa-eye"><span></button>
+                    <button type="button" class="btn btn-sm btn-success me-2 edit_StudentData" value="' . $results['id'] . '" data-bs-toggle="modal" data-bs-target="#editStudentModal">
+                            <span class="fa-solid fa-pen-to-square"></button>
+                            <button type="button" class="btn btn-sm btn-danger delete_StudentData" value="' . $results['id'] . '" data-bs-toggle="modal" data-bs-target="#deleteStudentModal"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                    </tr>';
+        }
+        if (!empty($data)) {
+            $response = ['SearchConditionSuccess' => true, 'data' => implode('', $data)];
+        } else {
+            $response = ['SearchConditionFailed' => true, 'data' => '<tr><td colspan="8" class="text-center text-danger">No student data found.</td></tr>'];
+        }
+        header("Content-Type: application/json");
+        echo json_encode($response);
     }
 }

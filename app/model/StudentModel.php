@@ -61,11 +61,8 @@ class StudentModel extends Model
         $sql = "SELECT * FROM students_data WHERE name LIKE '$search%' OR email LIKE '$search%'";
         $this->db->prepare($sql);
         if($this->db->execute()){
-            $res = $this->db->fetchAssociative();
-            if( $res > 1){
-                return $res;
-            }
+            return $this->db->fetchAllAssociative();
         }
-        return false;
+        return [];
     }
 }

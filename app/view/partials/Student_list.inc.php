@@ -192,10 +192,10 @@
                                 <input type="email" class="form-control" id="email" placeholder="Trace email">
                             </div>
                             <div class="col col-12">
-                                <input type="password" class="form-control" id="password" placeholder="Password" aria-label="Last name">
+                                <input type="text" class="form-control" id="password" placeholder="Password" aria-label="Last name">
                             </div>
                             <div class="col col-12 my-2">
-                                <input type="password" class="form-control" id="c_password" placeholder="Confirm password" aria-label="Last name">
+                                <input type="text" class="form-control" id="c_password" placeholder="Confirm password" aria-label="Last name">
                             </div>
                             <div class="col col-6">
                                 <select id="grade_level" class="form-select" aria-label="Default select example">
@@ -308,7 +308,7 @@
                     } else {
                         //no student found result
                         echo '<tr class="border-0 text-danger">';
-                        echo '<td colspan="8" class="st_no_s">No data found.</td>';
+                        echo '<td colspan="8" class="st_no_s text-center">No student data found.</td>';
                         echo "</tr>";
                     }
                     ?>
