@@ -97,20 +97,20 @@
                             <div class="input-group col-12 ">
                                 <label class="input-group-text" for="student_GradeLevel">Grade</label>
                                 <select class="form-select" id="student_GradeLevel" name="student_GradeLevel">
-                                    <option value="g11">Grade 11</option>
+                                    <option value="g11" disabled>Grade 11</option>
                                     <option value="g12">Grade 12</option>
                                 </select>
                             </div>
                             <div class="input-group col-12 my-3">
                                 <label class="input-group-text" for="student_Strand">Strand</label>
                                 <select class="form-select" name="student_Strand" id="student_Strand">
-                                    <option value="abm">ABM</option>
-                                    <option value="gas">GAS</option>
-                                    <option value="art_and_design">TVL ART & DESIGN</option>
-                                    <option value="he">TVL HE</option>
-                                    <option value="humss">HUMSS</option>
+                                    <option value="abm" disabled>ABM</option>
+                                    <option value="gas" disabled>GAS</option>
+                                    <option value="art_and_design" disabled>TVL ART & DESIGN</option>
+                                    <option value="he" disabled>TVL HE</option>
+                                    <option value="humss" >HUMSS</option>
                                     <option value="ict">TVL ICT</option>
-                                    <option value="stem">STEM</option>
+                                    <option value="stem" disabled>STEM</option>
                                 </select>
                             </div>
                             <div class="input-group col-12">
@@ -200,20 +200,20 @@
                             <div class="col col-6">
                                 <select id="grade_level" class="form-select" aria-label="Default select example">
                                     <option selected disabled>Select Grade Level</option>
-                                    <option value="g11">Grade 11</option>
+                                    <option value="g11" disabled>Grade 11</option>
                                     <option value="g12">Grade 12</option>
                                 </select>
                             </div>
                             <div class="col col-6">
                                 <select id="strand" class="form-select" aria-label="Default select example">
                                     <option selected disabled>Select Strand</option>
-                                    <option value="abm">ABM</option>
-                                    <option value="gas">GAS</option>
-                                    <option value="art_and_design">TVL ART & DESIGN</option>
-                                    <option value="he">TVL HE</option>
-                                    <option value="humss">HUMSS</option>
-                                    <option value="ict">TVL ICT</option>
-                                    <option value="stem">STEM</option>
+                                    <option value="abm" disabled>ABM</option>
+                                    <option value="gas" disabled>GAS</option>
+                                    <option value="art_and_design" disabled>TVL ART & DESIGN</option>
+                                    <option value="he" disabled>TVL HE</option>
+                                    <option value="humss" >HUMSS</option>
+                                    <option value="ict" >TVL ICT</option>
+                                    <option value="stem" disabled>STEM</option>
 
                                 </select>
                             </div>

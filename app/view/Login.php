@@ -11,29 +11,28 @@ require_once(__DIR__ . '/partials/Nav.inc.php');
       <div class="row">
         <h1>
           Login
-        </h1>
+        </h1 class="m-0">
+        
         <form action="<?= baseurl() ?>/auth/login/" method="POST">
           <?php Session::warning('LOGIN-WARNING') ? Session::warning('LOGIN-WARNING') : '' ?>
           <?php Session::danger('LOGIN-ERROR') ? Session::danger('LOGIN-ERROR') : '' ?>
           <?php Session::success('LOGIN-SUCCESS') ? Session::success('LOGIN-SUCCESS') : '' ?>
           <input type="hidden" name="csrf_token" value="<?= Session::generateCsrfToken(); ?>">
+          <hr>
           <div class="col-12">
             <div class="form-group col-12">
               <label for="emailInput" class="form-label ">Trace email</label>
-              <input type="email" class="form-control rounded-0 " name="email" value="<?= old_value('email') ?>" id="emailInput">
+              <input type="email" class="form-control rounded-1 " name="email" value="<?= old_value('email') ?>" id="emailInput">
             </div>
             <div class="form-group password-container col-12">
               <label for="passwordInput" class="form-label">Password</label>
-              <input type="password" class="form-control rounded-0" name="password" value="<?= old_value('password') ?>" id="passwordInput">
+              <input type="password" class="form-control rounded-1" name="password" value="<?= old_value('password') ?>" id="passwordInput">
               <i class="fa-regular fa-eye" id="show-password"></i>
-              <div class="form-check col-12 pt-1">
-                <label for="checkboxInput" class="form-check-label">Remember me</label>
-                <input type="checkbox" class="form-check-input" name="checkbox" id="checkboxInput">
-              </div>
             </div>
             <div class="form-group d-grid col-12 py-3">
-              <button type="submit" class="btn btn-primary" name="login_submit">Login</button>
+              <button type="submit" class="btn btn-primary py-2" name="login_submit">Login</button>
             </div>
+            <hr>
             <div class="text-center pb-2">
               <a href="<?= baseurl() ?>/account/forgot_password" class="f-btn ">Forgot password?</a>
             </div>

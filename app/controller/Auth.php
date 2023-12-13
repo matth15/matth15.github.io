@@ -53,6 +53,9 @@ class Auth extends Controller
             $lastName = $this->request->data('lastname');
             $firstName = $this->request->data('firstname');
             $email = $this->request->data('email');
+
+            $parentPhoneNo =  $this->request->data('parent_phone_no');
+
             $password =  $this->request->data('password');
             $confirmPassword =  $this->request->data('confirm_password');
             $gradeLevel = $this->request->data('grade_level');
@@ -77,13 +80,16 @@ class Auth extends Controller
                     $data['signup-err'] = "Last name should be at least 3 Characters.";
                 } else {
 
-                    // Validate email field
+                    // Validate email field & parent phone number
                     if (!$rule->isRequired($email)) {
                         $data['signup-err'] = "Email address is Required!";
                     } elseif (!$rule->checkEmailDomain($email, "tracecollege.edu.ph")) {
                         $data['signup-err-domain'] = " Only TRACE Email domain can access sign up form.";
                     } elseif (!$rule->emailUnique($email)){
-
+                        //
+                    }
+                    elseif(!$rule->isRequired($parentPhoneNo)){
+                        //
                     }
                      else {
                         // Validate password field
@@ -124,7 +130,7 @@ class Auth extends Controller
 
             // Login Process
             if (empty($data)) {
-                $result = $this->authmodel->register($firstName . ' ' . $lastName, $email, $password, $gradeLevel, $strand);
+                $result = $this->authmodel->register($firstName . ' ' . $lastName, $email, $password, $gradeLevel, $strand,$parentPhoneNo);
                 if ($result) {
                     Session::set('LOGIN-SUCCESS', 'Registration successful.');
                     $this->redirect->to('auth/login');

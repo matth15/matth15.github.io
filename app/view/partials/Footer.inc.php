@@ -6,9 +6,6 @@
 </footer>
 <!-- BOOTSTRAP -->
 <script src="/public/assets/js/bootstrap.bundle.min.js"></script>
-<!-- SCRIPT -->
-<script src="/public/assets/script.js"></script>
-<script src=""></script>
 </body>
 
 </html>

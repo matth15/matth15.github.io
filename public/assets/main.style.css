@@ -157,6 +157,10 @@
     text-align: left;
    
   }
+  #studentTable tr:hover ,#studentTable tr:nth-child(even):hover{
+    background-color: rgb(27, 60, 75);
+    color: white;
+  }
   #studentTable tr,#facultyTable tr {
     border-radius: 20px;
     background-color:rgb(224, 224, 224) ;

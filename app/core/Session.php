@@ -265,7 +265,7 @@ class Session
     {
         if (isset($_SESSION[$msg])) {
 
-            echo '<div class="alert alert-danger rounded-0 d-flex justify-content-center ">' . $_SESSION[$msg] . '</div>';
+            echo '<div class="alert alert-danger rounded-2 d-flex justify-content-center ">' . $_SESSION[$msg] . '</div>';
 
             unset($_SESSION[$msg]);
         }
@@ -275,7 +275,7 @@ class Session
     {
         if (isset($_SESSION[$msg])) {
 
-            echo '<div class="alert alert-warning rounded-0 d-flex justify-content-center ">' . $_SESSION[$msg] . '</div>';
+            echo '<div class="alert alert-warning rounded-2 d-flex justify-content-center ">' . $_SESSION[$msg] . '</div>';
 
             unset($_SESSION[$msg]);
         }

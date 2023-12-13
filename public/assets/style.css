@@ -90,7 +90,11 @@ h1,h2,h3,h4,h5,h6,p{
     #f-sect{ background:var(--maroon) }
 }
 /** form control style **/
+.form-section hr{
+    opacity: 0.2 ;    
+}
 .form-section{
+    overflow-y: scroll;
     background: var(--background-gradient-form);
     width: 100%;
     background-size: cover;
@@ -100,7 +104,7 @@ h1,h2,h3,h4,h5,h6,p{
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 110vh;
+    min-height: 100vh;
 }
 .form-section .wrapper{
     display: flex;
@@ -186,8 +190,8 @@ h1,h2,h3,h4,h5,h6,p{
 }
 .form-section .signup-form .fa-eye,.signup-form .fa-eye-slash {
     position: absolute;
-    top: 62%;
-    right: 9%;
+    top: 38%;
+    right: 10%;
     cursor: pointer;
     color: lightslategray
 }

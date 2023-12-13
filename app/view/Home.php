@@ -46,7 +46,7 @@ require_once __DIR__ . '/partials/Header.inc.php'; //HEADER
             </p>
           </div>
           <div class=" col-12 col-lg-6 pt-lg-5 d-flex justify-content-center">
-            <img class="img-about img-fluid" src="/public/assets/images/trace-college-logo.png" alt="TRACE College Logo" style="width: 288px" />
+            <img class="img-about img-fluid" src="/public/assets/images/trace-ea-logo-image.png" alt="TRACE College Logo" style="width: 288px" />
           </div>
         </div>
       </div>

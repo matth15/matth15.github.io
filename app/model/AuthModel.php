@@ -15,7 +15,7 @@ class AuthModel extends Model
      *           REGISTER STUDENTS MODEL
      * =============================================
      */
-    public function register($fullname, $email, $password, $grade_level, $strand)
+    public function register($fullname, $email, $password, $grade_level, $strand,$ParentPhoneNo)
     {
 
         $rule = new ValidationRules();
@@ -27,7 +27,7 @@ class AuthModel extends Model
 
       try{
         $this->db->beginTransaction();
-        $query = "INSERT INTO students_data (unique_id,name, email, password , grade_level ,strand,user_type) VALUES (:unique_id,:name, :email, :hashedPassword, :grade_level, :strand,:user_type)";
+        $query = "INSERT INTO students_data (unique_id,name, email, parent_phone_no , password , grade_level ,strand,user_type) VALUES (:unique_id,:name, :email, :parent_phone_no, :hashedPassword, :grade_level, :strand,:user_type)";
 
         $unique_id = $this->generateStudentUniqueId();
 
@@ -35,6 +35,7 @@ class AuthModel extends Model
         $this->db->bindValue(':unique_id',$unique_id);
         $this->db->bindValue(':name', $fullname);
         $this->db->bindValue(':email', $email);
+        $this->db->bindValue(':parent_phone_no', $ParentPhoneNo);
         $this->db->bindValue(':hashedPassword', $hashedPassword);
         $this->db->bindValue(':grade_level', $grade_level);
         $this->db->bindValue(':strand', $strand);
